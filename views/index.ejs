@@ -1,14 +1,28 @@
 <%- include("partials/header.ejs") %>
-<%if(locals.factures){%>
-    <ul>
-        <%factures.forEach(facture => {%>
-            <li><%= facture.inv_number %></li>    
-        <%});%>
-    </ul>
-    <ul>
-        <%factures.forEach(facture => {%>
-            <li><%= facture.inv_date %></li>    
-        <%});%>
-    </ul>
-    <%}%>
+<%if(locals.facturesByDate && locals.facturesByNum){%>
+    <input id="btnByDate" type="button" value="Trier par date">
+    <input id="btnByNum" type="button" value="Trier par numero de facture">
+<ul id="sortByDate" class="hidden">
+    <%facturesByDate.forEach(facture => {%>
+    <li><%= facture.inv_date %></li>
+    <%});%>
+</ul>
+
+<ul id="sortByNum">
+    <%facturesByNum.forEach(facture => {%>
+    <li><%= facture.inv_number %></li>
+    <%});%>
+</ul>
+<%}%>
+<script>
+    //Ajoute les evenements sur les bouton qui permettent de n'afficher que la liste par numero ou par date
+    document.querySelector("#btnByDate").addEventListener("click", ()=>{
+        document.querySelector("#sortByDate").classList.remove("hidden");
+        document.querySelector("#sortByNum").classList.add("hidden");
+    });
+    document.querySelector("#btnByNum").addEventListener("click", ()=>{
+        document.querySelector("#sortByDate").classList.add("hidden");
+        document.querySelector("#sortByNum").classList.remove("hidden");
+    });
+</script>
 <%- include("partials/footer.ejs") %>

@@ -18,11 +18,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.get("/", async(req, res) => {
-    const result = await db.query("SELECT * FROM invoice");
-    const factures = result.rows;
-    console.log(factures)
+    const resultByDate = await db.query("SELECT * FROM invoice ORDER BY inv_date ASC");
+    const resultByNum = await db.query("SELECT * FROM invoice ORDER BY inv_number ASC");
+    const facturesByDate = resultByDate.rows;
+    const facturesByNum = resultByNum.rows;
     res.render("index.ejs", {
-        factures: factures
+        facturesByDate,
+        facturesByNum
     });
 });
 
