@@ -1,0 +1,14 @@
+<%- include("partials/header.ejs") %>
+<%if(locals.factures){%>
+    <ul>
+        <%factures.forEach(facture => {%>
+            <li><%= facture.inv_number %></li>    
+        <%});%>
+    </ul>
+    <ul>
+        <%factures.forEach(facture => {%>
+            <li><%= facture.inv_date %></li>    
+        <%});%>
+    </ul>
+    <%}%>
+<%- include("partials/footer.ejs") %>
