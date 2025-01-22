@@ -1,7 +1,7 @@
 <%- include("partials/header.ejs") %>
 <%if(locals.facturesByDate && locals.facturesByNum){%>
+    <input id="btnByNum" type="button" value="Trier par numero de facture" class="active">
     <input id="btnByDate" type="button" value="Trier par date">
-    <input id="btnByNum" type="button" value="Trier par numero de facture">
 <ul id="sortByDate" class="hidden">
     <%facturesByDate.forEach(facture => {%>
     <li><%= facture.inv_date %></li>
@@ -14,6 +14,28 @@
     <%});%>
 </ul>
 <%}%>
+
+<form action="/search" method="post">
+    <fieldset>
+        <legend>Chercher par</legend>
+            <input type="radio" id="invNum" checked name="searchSelect" value="inv_number">
+            <label for="invNum">Numéro de facture</label>
+
+            <input type="radio" id="invDate" name="searchSelect" value="inv_date">
+            <label for="invDate">Date</label>
+            
+            <input type="radio" id="custName" name="searchSelect" value="cust_lastname">
+            <label for="custName">Nom de client</label>
+
+
+            <input type="radio" name="searchSelect" id="custNum" value="cust_number">
+            <label for="custNum">Numero de client</label>
+    </fieldset>
+    <input type="text" name="searchField" value="François">
+    <input type="submit" value="OK">
+</form>
+
+
 <script>
     //Ajoute les evenements sur les bouton qui permettent de n'afficher que la liste par numero ou par date
     document.querySelector("#btnByDate").addEventListener("click", ()=>{

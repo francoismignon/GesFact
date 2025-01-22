@@ -28,6 +28,11 @@ app.get("/", async(req, res) => {
     });
 });
 
+app.post("/search", async(req, res)=>{
+    console.log(req.body.searchField);
+    console.log(req.body.searchSelect);
+});
+
 app.listen(port, () => {
     console.log(`Le serveur a démarré sur http://localhost:${port}`);
 });
