@@ -18,22 +18,30 @@
 <form action="/search" method="post">
     <fieldset>
         <legend>Chercher par</legend>
-            <input type="radio" id="invNum" checked name="searchSelect" value="inv_number">
+            <input type="radio" id="invNum" checked name="searchSelect" value="inv_number" class="radio">
             <label for="invNum">Numéro de facture</label>
 
             <input type="radio" id="invDate" name="searchSelect" value="inv_date">
             <label for="invDate">Date</label>
-            
-            <input type="radio" id="custName" name="searchSelect" value="cust_lastname">
+
+            <input type="radio" id="custName" name="searchSelect" value="cust_lastname" class="radio">
             <label for="custName">Nom de client</label>
 
-
-            <input type="radio" name="searchSelect" id="custNum" value="cust_number">
+            <input type="radio" name="searchSelect" id="custNum" value="cust_number" class="radio">
             <label for="custNum">Numero de client</label>
     </fieldset>
-    <input type="text" name="searchField" value="François">
+    <input type="text" name="searchField" id="searchField" placeholder="votre recherche">
+    <input type="date" name="searchDate" id="dateField" class="hidden">
     <input type="submit" value="OK">
 </form>
+
+<%if(locals.factures){%>
+    <%factures.forEach(facture => {%>
+        <ul>
+            <li><%= facture.inv_number %> <%= facture.cust_lastname %> <%= facture.inv_date %></li>
+        </ul>
+    <%});%>
+<%}%>
 
 
 <script>
@@ -45,6 +53,19 @@
     document.querySelector("#btnByNum").addEventListener("click", ()=>{
         document.querySelector("#sortByDate").classList.add("hidden");
         document.querySelector("#sortByNum").classList.remove("hidden");
+    });
+    document.querySelector("#invDate").addEventListener("change", ()=>{
+        document.querySelector("#searchField").classList.add("hidden");
+        document.querySelector("#dateField").classList.remove("hidden");
+    });
+    // affiche le selecteur de date si le bon bouton radio est coché
+    const radios = document.querySelectorAll(".radio");
+    console.log(radios);
+    radios.forEach(radio => {
+        radio.addEventListener("change", ()=>{
+            document.querySelector("#searchField").classList.remove("hidden");
+            document.querySelector("#dateField").classList.add("hidden");
+        });      
     });
 </script>
 <%- include("partials/footer.ejs") %>
