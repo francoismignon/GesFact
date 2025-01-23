@@ -42,7 +42,11 @@
         </ul>
     <%});%>
 <%}%>
-
+<!-- boutton vers la route pour ajouter une nouvelle facture -->
+<a href="/new">
+    <input type="submit" value="Ajouter Facture">
+</a>
+<%- include("partials/footer.ejs") %>
 
 <script>
     //Ajoute les evenements sur les bouton qui permettent de n'afficher que la liste par numero ou par date
@@ -68,4 +72,3 @@
         });      
     });
 </script>
-<%- include("partials/footer.ejs") %>

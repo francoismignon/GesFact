@@ -1,0 +1,12 @@
+<%- include("partials/header.ejs") %>
+<%if(locals.newInvNum){%>
+    <label for="invNum">Numero de facture</label>
+    <input type="text" name="inv_num" id="invNum" value="<%= newInvNum %>" disabled>
+    <%console.log(typeof(invNumber));%>
+<%}%>
+
+<%- include("partials/footer.ejs") %>
+
+<script>
+
+</script>
