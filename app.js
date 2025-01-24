@@ -66,13 +66,17 @@ app.post("/search", async (req, res) => {
 
 app.get("/new", async (req, res) => {
     lastInvNum++;
-    console.log(lastInvNum);
     let newInvNum = lastInvNum.toString();
-    console.log(newInvNum);
     res.render("facture.ejs", {
         newInvNum
     }
     );
+});
+
+app.post("/searchclient", async(req, res)=>{
+    const param = req.body.searchclient;
+    console.log(req.body.searchclient);
+    const result = await db.query(`SELECT * FROM customers WHERE `);
 });
 
 app.listen(port, () => {

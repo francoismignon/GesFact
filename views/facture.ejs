@@ -1,12 +1,102 @@
 <%- include("partials/header.ejs") %>
+<!-- // Génération d’un n° de facture unique -->
 <%if(locals.newInvNum){%>
     <label for="invNum">Numero de facture</label>
     <input type="text" name="inv_num" id="invNum" value="<%= newInvNum %>" disabled>
     <%console.log(typeof(invNumber));%>
 <%}%>
+<!-- // Une Date émission -->
+<label for="dateEm">Date émission</label>
+<input type="text" name="inputDateEm" id="dateEm" disabled>
+
+<!-- // Date échéance (par défaut comptant = Date émission) -->
+<label for="dateEch">Date échéance</label>
+<input type="text" name="inputDateEch" id="dateEch">
+
+<!-- // Choix d'un client à partir d’une liste avec recherche sur n° de client / nom de client/ n° de tva du client  -->
+ <h2>Recherche clients</h2>
+ <form action="/searchclient" method="post">
+    <fieldset>
+        <legend>recherche client sur</legend>
+        <input type="radio" name="searchclient" value="cust_number" id="numCli">
+        <label for="numCli">n° de client</label>
+    
+        <input type="radio" name="searchclient" value="cust_lastname" id="nomCli">
+        <label for="nomCli">Nom de client</label>
+    
+        <input type="radio" name="searchclient" value="cust_vat_number" id="numTvaCli">
+        <label for="numTvaCli">n° de tva du client</label>
+     </fieldset>
+     <input type="text" name="" id="">
+     <input type="submit" value="OK">
+ </form>
+ <ul>
+    <li>liste de client</li>
+ </ul>
+ 
+
+    <!-- // Une table détail facture qui contient les différentes lignes de la facture  -->
+     <h2>Recherche articles</h2>
+    <!-- // La sélection d'article à partir d’une liste avec recherche sur n° d’article / n° article du fournisseur / nom de l’article  -->
+     <form action="/searcharticle" method="post">
+        <fieldset>
+            <legend>recherche article sur</legend>
+            <input type="radio" name="" id="numArt">
+            <label for="numArt">n° d’article</label>
+
+            <input type="radio" name="" id="numFour">
+            <label for="numFour">n° article du fournisseur</label>
+
+            <input type="radio" name="" id="nomArt">
+            <label for="nomArt">nom de l’article</label>
+        </fieldset>
+        <input type="text" name="" id="">
+        <input type="submit" value="OK">
+     </form>
+
+     <ul>
+        <li>liste d'articles</li>
+     </ul>
+    <!-- // La table détail doit contenir les éléments suivants :  -->
+    <!-- // Un n° de ligne de détail  -->
+    <!-- // La quantité (1 par défaut)  -->
+    <!-- // Une remise optionnelle  -->
+    <!-- // Afficher le total HTVA prix par ligne  -->
+    <!-- // Le taux de TVA correspondant   -->
+    <!-- // Le montant de TVA correspondant  -->
+<h2>Details facture</h2>
+<label for="numLigne">ligne</label>
+<input type="text">
+
+<label for="qtyArt">quantité</label>
+<input type="text">
+
+<label for="remOpt">remise optionnelle</label>
+<input type="text">
+
+<label for="thtva">total HTVA</label>
+<input type="text">
+
+<label for="thtv">Taux TVA</label>
+<input type="text">
+
+<label for="mtva">Montant TVA</label>
+<input type="text">
+
+<label for="ttc">Prix TTC</label>
+<input type="text">
+
+<!-- // Le total des bases imposables => Montant Total Hors TVA  -->
+<!-- // Le Montant total de la TVA  -->
+<!-- // Le Montant total TVA Comprise => TTC -->
+ <h2>Totaux</h2>
+ <label for="mthtva">Montant Total Hors TVA</label>
+ <input type="text">
+
+ <label for="mttva">Montant total de la TVA</label>
+ <input type="text">
+
+ <label for="mttvac">Montant total TVA Comprise</label>
+ <input type="text">
 
 <%- include("partials/footer.ejs") %>
-
-<script>
-
-</script>
