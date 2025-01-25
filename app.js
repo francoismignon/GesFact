@@ -1,6 +1,8 @@
 import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
+import Facture from "./models/Facture.js"
+import Article from "./models/Article.js";
 
 
 const app = express();
@@ -15,6 +17,9 @@ const db = new pg.Client({
 db.connect();
 let factures = [];
 let lastInvNum;
+let clients = [];
+let items = [];
+let chosenItems = [];
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -74,9 +79,54 @@ app.get("/new", async (req, res) => {
 });
 
 app.post("/searchclient", async(req, res)=>{
-    const param = req.body.searchclient;
-    console.log(req.body.searchclient);
-    const result = await db.query(`SELECT * FROM customers WHERE `);
+    const result = await db.query(`SELECT * FROM customers WHERE ${req.body.searchclient} = $1`, [req.body.searchclientField]);
+    clients=[];
+    result.rows.forEach(client => {
+        clients.push({
+            id: client.id,
+            nom : client.cust_lastname,
+            prenom : client.cust_firstname
+        });
+    });
+    res.render("facture.ejs", {clients, items});
+});
+
+app.post("/searcharticle", async(req, res)=>{
+    const result = await db.query(`SELECT * FROM item WHERE ${req.body.searchItem} = $1`, [req.body.searchItemField]);
+    items = [];
+    result.rows.forEach(item => {
+        let article = new Article();
+        article.id = item.id;
+        article.vatTypeId = item.vat_type_id;
+        article.unitId = item.unit_id;
+        article.classId = item.class_id;
+        article.itemNumber = item.item_number;
+        article.itemEan = item.item_ean;
+        article.itemLabel = item.item_label;
+        article.itemDesc = item.item_description;
+        article.itemRetailPrice = item.item_retail_price;
+        items.push(article);
+    });
+    res.render("facture.ejs", {
+        items,
+        clients
+    });
+});
+
+app.post("/addtodetails", async(req, res)=>{
+    const id = parseInt(req.body.id);
+    const index = items.findIndex((item) => item.id === id);
+    chosenItems.push(items[index]);
+    console.log(chosenItems);
+    res.render("facture.ejs", {
+        clients,
+        chosenItems
+    });
+});
+
+app.post("/save", (req, res)=>{
+    
+    // res.redirect("/");
 });
 
 app.listen(port, () => {

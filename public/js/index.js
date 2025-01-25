@@ -13,7 +13,6 @@ document.querySelector("#invDate").addEventListener("change", ()=>{
 });
 // affiche le selecteur de date si le bon bouton radio est coché
 const radios = document.querySelectorAll(".radio");
-console.log(radios);
 radios.forEach(radio => {
     radio.addEventListener("change", ()=>{
         document.querySelector("#searchField").classList.remove("hidden");
