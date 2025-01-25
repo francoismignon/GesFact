@@ -79,35 +79,39 @@
     <!-- // Le montant de TVA correspondant  -->
 <h2>Details facture</h2>
 <%if(locals.chosenItems){%>
-
-   <label for="numLigne">ligne</label>
-   <input type="text">
-   
-   <label for="labelLabel">label</label>
-   <input type="text" value="<%= chosenItems[0].itemLabel %>" disabled>
-
-   <label for="labelDesc">Description</label>
-   <input type="text" value="<%= chosenItems[0].itemDesc %>" disabled>
-   
-   <label for="qtyArt">quantité</label>
-   <input type="text">
-   
-   <label for="remOpt">remise optionnelle</label>
-   <input type="text">
-   
-   <label for="thtva">total HTVA</label>
-   <input type="text">
-   
-   <label for="thtv">Taux TVA</label>
-   <input type="text">
-   
-   <label for="mtva">Montant TVA</label>
-   <input type="text">
-   
-   <label for="ttc">Prix TTC</label>
-   <input type="text">
-   
-   <input type="submit" value="Ajouter un article">
+   <ul>
+      <%chosenItems.forEach(chosenItem => {%>
+         <li>   
+            <label for="numLigne">ligne</label>
+            <input type="text">
+            
+            <label for="labelLabel">label</label>
+            <input type="text" value="<%= chosenItem.itemLabel %>" disabled>
+            
+            <label for="labelDesc">Description</label>
+            <input type="text" value="<%= chosenItem.itemDesc %>" disabled>
+            
+            <label for="qtyArt">quantité</label>
+            <input type="text">
+            
+            <label for="remOpt">remise optionnelle</label>
+            <input type="text">
+            
+            <label for="thtva">total HTVA</label>
+            <input type="text">
+            
+            <label for="thtv">Taux TVA</label>
+            <input type="text">
+            
+            <label for="mtva">Montant TVA</label>
+            <input type="text">
+            
+            <label for="ttc">Prix TTC</label>
+            <input type="text">
+         </li>
+      <%});%>
+   </ul>
+<input type="submit" value="Valider ligne">
 <%}%>
 
 <!-- // Le total des bases imposables => Montant Total Hors TVA  -->
