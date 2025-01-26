@@ -1,7 +1,7 @@
 class FactureDetail{
-    constructor(invId, itemId, vatTypeId, lineNumber, qty, price, discount, vatPercentage, description){
+    constructor(invId, item, vatTypeId, lineNumber, qty, price, discount, vatPercentage, description){
         this.invId = invId;
-        this.itemId = itemId;
+        this.item = item;
         this.vatTypeId = vatTypeId;
         this.lineNumber = lineNumber;
         this.qty = qty;

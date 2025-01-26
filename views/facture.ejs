@@ -58,17 +58,17 @@
         <input type="submit" value="OK">
      </form>
      <%if(locals.items){%>
-     <ul>
-        <%items.forEach(item => {%>
-        <li>
-           <form action="/addtodetails" method="post">
-               <input type="text" name="id" value="<%= item.id %>" hidden>
-              <%= item.itemLabel %> <%= item.itemDesc %> <input type="submit" value="Ajouter">
-           </form>
-        </li>
-        <% });%>
-     </ul>
-     <%}%>
+<ul>
+   <%items.forEach(item => {%>
+   <li>
+      <form action="/addtodetails" method="post">
+         <input type="text" name="id" value="<%= item.id %>">
+         <%= item.label %> <%= item.description %> <input type="submit" value="Ajouter">
+      </form>
+   </li>
+   <% });%>
+</ul>
+<%}%>
      
     <!-- // La table détail doit contenir les éléments suivants :  -->
     <!-- // Un n° de ligne de détail  -->
@@ -78,57 +78,50 @@
     <!-- // Le taux de TVA correspondant   -->
     <!-- // Le montant de TVA correspondant  -->
 <h2>Details facture</h2>
-<%if(locals.chosenItems){%>
-   <ul>
-      <%chosenItems.forEach(chosenItem => {%>
-         <li>   
-            <label for="numLigne">ligne</label>
-            <input type="text">
-            
-            <label for="labelLabel">label</label>
-            <input type="text" value="<%= chosenItem.itemLabel %>" disabled>
-            
-            <label for="labelDesc">Description</label>
-            <input type="text" value="<%= chosenItem.itemDesc %>" disabled>
-            
-            <label for="qtyArt">quantité</label>
-            <input type="text">
-            
-            <label for="remOpt">remise optionnelle</label>
-            <input type="text">
-            
-            <label for="thtva">total HTVA</label>
-            <input type="text">
-            
-            <label for="thtv">Taux TVA</label>
-            <input type="text">
-            
-            <label for="mtva">Montant TVA</label>
-            <input type="text">
-            
-            <label for="ttc">Prix TTC</label>
-            <input type="text">
-         </li>
-      <%});%>
-   </ul>
-<input type="submit" value="Valider ligne">
+<%if(locals.details){%>
+<ul>
+   <%details.forEach(detail => {%>
+   <li>
+      <form action="/validligne" method="post">
+
+         <label for="labelLabel">label</label>
+         <input type="text" value="<%= detail.item_label %>" disabled>
+         
+         <label for="labelDesc">Description</label>
+         <input type="text" value="<%= detail.item_description %>" disabled>
+
+         <label for="labelPrix">Prix unitaire</label>
+         <input type="text" value="<%= detail.item_retail_price %>" disabled>
+         
+         <label for="qtyArt">quantité</label>
+         <input type="text">
+         
+         <label for="remOpt">remise optionnelle</label>
+         <input type="text">
+         
+         <label for="thtv">Taux TVA</label>
+         <input type="text" value="<%= detail.vat_percentage %>" disabled>
+         
+         <input type="submit" value="Valider ligne">
+      </form>
+   </li>
+   <%});%>
+</ul>
 <%}%>
+
 
 <!-- // Le total des bases imposables => Montant Total Hors TVA  -->
 <!-- // Le Montant total de la TVA  -->
 <!-- // Le Montant total TVA Comprise => TTC -->
- <h2>Totaux</h2>
- <label for="mthtva">Montant Total Hors TVA</label>
- <input type="text">
+<h2>Totaux</h2>
+<label for="mthtva">Montant Total Hors TVA</label>
+<input type="text">
 
- <label for="mttva">Montant total de la TVA</label>
- <input type="text">
+<label for="mttva">Montant total de la TVA</label>
+<input type="text">
 
- <label for="mttvac">Montant total TVA Comprise</label>
- <input type="text">
+<label for="mttvac">Montant total TVA Comprise</label>
+<input type="text">
 
-<form action="/save" method="post">
-   <input type="submit" value="Enregistrer la facture">
-</form>
 
 <%- include("partials/footer.ejs") %>
