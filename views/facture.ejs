@@ -79,49 +79,80 @@
     <!-- // Le montant de TVA correspondant  -->
 <h2>Details facture</h2>
 <%if(locals.details){%>
+   <form action="/validligne" method="post">
 <ul>
    <%details.forEach(detail => {%>
-   <li>
-      <form action="/validligne" method="post">
+      <li>
+         <input type="text" value="<%= detail.id %>">
 
          <label for="labelLabel">label</label>
          <input type="text" value="<%= detail.item_label %>" disabled>
-         
+
          <label for="labelDesc">Description</label>
          <input type="text" value="<%= detail.item_description %>" disabled>
 
          <label for="labelPrix">Prix unitaire</label>
          <input type="text" value="<%= detail.item_retail_price %>" disabled>
-         
+
          <label for="qtyArt">quantité</label>
-         <input type="text">
-         
+         <input type="text" name="inputQty<%= detail.id %>" value="1">
+
          <label for="remOpt">remise optionnelle</label>
-         <input type="text">
-         
+         <input type="text" name="inputOpt<%= detail.id %>" value="1">
+
          <label for="thtv">Taux TVA</label>
          <input type="text" value="<%= detail.vat_percentage %>" disabled>
-         
-         <input type="submit" value="Valider ligne">
-      </form>
-   </li>
-   <%});%>
-</ul>
+      </li>
+      <%});%>
+   </ul>
+   <input type="submit" value="Valider detail">
+</form>
 <%}%>
 
+<%if(locals.factureDetails){%>
+   <ul>
+      <%factureDetails.forEach(detail => {%>
+         <li>
+            <label for="numLigne">Ligne</label>
+            <input type="text" disabled value="<%= detail.line_number %>">
+      
+            <label for="finalDes">Description</label>
+            <input type="text" disabled value="<%= detail.item_label %> (<%= detail.item_description %>)">
+      
+            <label for="finalQty">Quantité</label>
+            <input type="text" disabled value="<%= detail.qty %>">
+      
+            <label for="finalOpt">Remise opt</label>
+            <input type="text" disabled value="<%= detail.discount %>">
+      
+            <label for="finalTotHtva">Total HTVA</label>
+            <input type="text" disabled value="<%= detail.totHtva %>">
+         </li>
+      <%})%>
+   </ul>
+<%}%>
 
 <!-- // Le total des bases imposables => Montant Total Hors TVA  -->
 <!-- // Le Montant total de la TVA  -->
 <!-- // Le Montant total TVA Comprise => TTC -->
 <h2>Totaux</h2>
+
 <label for="mthtva">Montant Total Hors TVA</label>
 <input type="text">
 
-<label for="mttva">Montant total de la TVA</label>
-<input type="text">
+<%if(locals.base21 || locals.base6){%>
+
+   <label for="base21">21%</label>
+   <input type="text" value="<%= base21 %>">
+   
+   <label for="base6">6%</label>
+   <input type="text" value="<%= base6 %>">
+<%}%>
 
 <label for="mttvac">Montant total TVA Comprise</label>
 <input type="text">
 
+<label for="mttva">Dont TVA</label>
+<input type="text">
 
 <%- include("partials/footer.ejs") %>
