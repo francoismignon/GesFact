@@ -20,6 +20,11 @@ let items = [];
 let details =[];
 let base21 = 0;
 let base6 = 0;
+let totHtva = 0;
+let tva21 = 0;
+let tva6 = 0;
+let newInvNum;
+let fullDate;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -28,12 +33,14 @@ function computeUnitHtva(montant, quantite){
     return montant * quantite;
 }
 
-function computeUnitTva21(prixHtva, tva){
-   return prixHtva * (1 + (parseInt(tva)/100)); 
+function computeUnitTva(prixHtva, tva) {
+    const result = prixHtva * (1 + (parseInt(tva) / 100));
+    return result;
 }
 
-function computeUnitTva6(prixHtva, tva){
-    return prixHtva * (1 + (parseInt(tva)/100));
+function computeTva(prixHtva, tva){
+    const result = prixHtva * (parseInt(tva)/100);
+    return result;
 }
 
 app.get("/", async (req, res) => {
@@ -75,17 +82,20 @@ app.post("/search", async (req, res) => {
         facture.inv_date = fullDate;
         factures.push(facture);
     });
-
-
-
     res.redirect("/");
 });
 
 app.get("/new", async (req, res) => {
     lastInvNum++;
-    let newInvNum = lastInvNum.toString();
+    const date = new Date();
+    const day = (date.getDate() < 10) ? "0" + date.getDate() : date.getDate();
+    const month = ((date.getMonth() + 1) < 10) ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+    const year = date.getFullYear()
+    fullDate = day + "/" + month + "/" + year;
+    newInvNum = lastInvNum.toString();
     res.render("facture.ejs", {
-        newInvNum
+        newInvNum,
+        fullDate
     }
     );
 });
@@ -103,7 +113,9 @@ app.post("/searchclient", async(req, res)=>{
     res.render("facture.ejs", {
         clients, 
         items,
-        details
+        details,
+        newInvNum,
+        fullDate
     });
 });
 
@@ -120,7 +132,9 @@ app.post("/searcharticle", async(req, res)=>{
     res.render("facture.ejs", {
         items,
         clients,
-        details
+        details,
+        newInvNum,
+        fullDate
     });
 });
 
@@ -133,6 +147,8 @@ app.post("/addtodetails", async(req, res)=>{
     res.render("facture.ejs", {
         clients,
         details,
+        newInvNum,
+        fullDate
     });
 
 });
@@ -154,24 +170,38 @@ app.post("/validligne", async(req, res)=>{
     factureDetails.forEach(d => {
         d.totHtva = computeUnitHtva(d.item_retail_price, d.qty);
     });
+    console.log(factureDetails);
     factureDetails.forEach(d => {
-        console.log(typeof(d.totHtva));
-        console.log(d.totHtva);
+        totHtva += d.totHtva;
+    });
+    factureDetails.forEach(d => {
         if (d.vat_percentage === "21.00") {
-            let totTva = computeUnitTva21(d.totHtva, d.vat_percentage);
+            let totTva = computeUnitTva(d.totHtva, d.vat_percentage);
+            let tva = computeTva(d.totHtva, d.vat_percentage);
             base21 += totTva;
+            tva21 += tva;
         } else {
-            let totTva = computeUnitTva6(d.totHtva, d.vat_percentage);
-            base6 += totTva ;
+            let totTva = computeUnitTva(d.totHtva, d.vat_percentage);
+            let tva = computeTva(d.totHtva, d.vat_percentage);
+            base6 += totTva;
+            tva6 += tva;
         }
     });
-
     res.render("facture.ejs", {
         clients,
         factureDetails,
-        base21,
-        base6
+        base21: base21.toFixed(2),
+        base6 : base6.toFixed(2),
+        totHtva,
+        totTvac : (base21 + base6).toFixed(2),
+        tva: (tva21 + tva6).toFixed(2),
+        newInvNum,
+        fullDate
     });
+});
+
+app.post("/validfacture", async(req, res)=>{
+    res.redirect("/");
 });
 
 app.listen(port, () => {

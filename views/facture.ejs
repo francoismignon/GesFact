@@ -1,158 +1,164 @@
 <%- include("partials/header.ejs") %>
-<!-- // Génération d’un n° de facture unique -->
-<%if(locals.newInvNum){%>
-<label for="invNum">Numero de facture</label>
-<input type="text" name="inv_num" id="invNum" value="<%= newInvNum %>" disabled>
-<%}%>
-<!-- // Une Date émission -->
-<label for="dateEm">Date émission</label>
-<input type="text" name="inputDateEm" id="dateEm" disabled>
-
-<!-- // Date échéance (par défaut comptant = Date émission) -->
-<label for="dateEch">Date échéance</label>
-<input type="text" name="inputDateEch" id="dateEch">
-
-<!-- // Choix d'un client à partir d’une liste avec recherche sur n° de client / nom de client/ n° de tva du client  -->
- <h2>Recherche clients</h2>
- <form action="/searchclient" method="post">
-    <fieldset>
-        <legend>recherche client sur</legend>
-        <input type="radio" name="searchclient" value="cust_number" id="numCli">
-        <label for="numCli">n° de client</label>
-    
-        <input type="radio" name="searchclient" value="cust_lastname" id="nomCli">
-        <label for="nomCli">Nom de client</label>
-    
-        <input type="radio" name="searchclient" value="cust_vat_number" id="numTvaCli">
-        <label for="numTvaCli">n° de tva du client</label>
-     </fieldset>
-     <input type="text" name="searchclientField">
-     <input type="submit" value="OK">
- </form>
- <%if(locals.clients){%>
-<ul>
-   <%clients.forEach(client => {%>
-   <li><%= client.nom %> <%= client.prenom %></li>
-   <%});%>
-</ul>
-<%}%>
- 
- 
-
-    <!-- // Une table détail facture qui contient les différentes lignes de la facture  -->
-     <h2>Recherche articles</h2>
-    <!-- // La sélection d'article à partir d’une liste avec recherche sur n° d’article / n° article du fournisseur / nom de l’article  -->
-     <form action="/searcharticle" method="post">
-        <fieldset>
-            <legend>recherche article sur</legend>
-            <input type="radio" name="searchItem" id="numArt" value="item_number">
-            <label for="numArt">n° d’article</label>
-
+   <!-- // Génération d’un n° de facture unique -->
+   <%if(locals.newInvNum){%>
+      <label for="invNum">Numero de facture</label>
+      <input type="text" name="inv_num" id="invNum" value="<%= newInvNum %>" disabled>
+      <%}%>
+      <%if(locals.fullDate){%>
+         
+         <!-- // Une Date émission -->
+         <label for="dateEm">Date émission</label>
+         <input type="text" name="inputDateEm" id="dateEm" disabled value="<%= fullDate %>">
+         
+         <!-- // Date échéance (par défaut comptant = Date émission) -->
+         <label for="dateEch">Date échéance</label>
+         <input type="text" name="inputDateEch" id="dateEch" disabled value="<%= fullDate %>">
+         <%}%>
+         
+         <!-- // Choix d'un client à partir d’une liste avec recherche sur n° de client / nom de client/ n° de tva du client  -->
+         <h2>Recherche clients</h2>
+         <form action="/searchclient" method="post">
+            <fieldset>
+               <legend>recherche client sur</legend>
+               <input type="radio" name="searchclient" value="cust_number" id="numCli">
+               <label for="numCli">n° de client</label>
+               
+               <input type="radio" name="searchclient" value="cust_lastname" id="nomCli">
+               <label for="nomCli">Nom de client</label>
+               
+               <input type="radio" name="searchclient" value="cust_vat_number" id="numTvaCli">
+               <label for="numTvaCli">n° de tva du client</label>
+            </fieldset>
+            <input type="text" name="searchclientField">
+            <input type="submit" value="OK">
+         </form>
+         <%if(locals.clients){%>
+            <ul>
+               <%clients.forEach(client => {%>
+                     <li><input type="radio" name="selectClient" id="checkboxName<%= client.id %>" value="<%= client.id %>"><label for="checkboxName<%= client.id %>"><%= client.nom %> <%= client.prenom %></label></li>
+                  <%});%>
+               </ul>
+               <%}%>
+               
+               
+               
+               <!-- // Une table détail facture qui contient les différentes lignes de la facture  -->
+               <h2>Recherche articles</h2>
+               <!-- // La sélection d'article à partir d’une liste avec recherche sur n° d’article / n° article du fournisseur / nom de l’article  -->
+               <form action="/searcharticle" method="post">
+                  <fieldset>
+                     <legend>recherche article sur</legend>
+                     <input type="radio" name="searchItem" id="numArt" value="item_number">
+                     <label for="numArt">n° d’article</label>
+                     
             <input type="radio" name="searchItem" id="numFour" value="item_ean">
             <label for="numFour">n° article du fournisseur</label>
-
+            
             <input type="radio" name="searchItem" id="nomArt" value="item_label">
             <label for="nomArt">nom de l’article</label>
-        </fieldset>
-        <input type="text" name="searchItemField" id="">
-        <input type="submit" value="OK">
-     </form>
-     <%if(locals.items){%>
-<ul>
-   <%items.forEach(item => {%>
-   <li>
-      <form action="/addtodetails" method="post">
-         <input type="text" name="id" value="<%= item.id %>">
-         <%= item.label %> <%= item.description %> <input type="submit" value="Ajouter">
+         </fieldset>
+         <input type="text" name="searchItemField" id="">
+         <input type="submit" value="OK">
       </form>
-   </li>
-   <% });%>
-</ul>
+      <%if(locals.items){%>
+         <ul>
+            <%items.forEach(item => {%>
+               <li>
+                  <form action="/addtodetails" method="post">
+                     <input type="text" name="id" value="<%= item.id %>">
+                     <%= item.label %> <%= item.description %> <input type="submit" value="Ajouter">
+                  </form>
+               </li>
+               <% });%>
+            </ul>
 <%}%>
      
-    <!-- // La table détail doit contenir les éléments suivants :  -->
-    <!-- // Un n° de ligne de détail  -->
-    <!-- // La quantité (1 par défaut)  -->
-    <!-- // Une remise optionnelle  -->
-    <!-- // Afficher le total HTVA prix par ligne  -->
-    <!-- // Le taux de TVA correspondant   -->
-    <!-- // Le montant de TVA correspondant  -->
+<!-- // La table détail doit contenir les éléments suivants :  -->
+<!-- // Un n° de ligne de détail  -->
+<!-- // La quantité (1 par défaut)  -->
+<!-- // Une remise optionnelle  -->
+<!-- // Afficher le total HTVA prix par ligne  -->
+<!-- // Le taux de TVA correspondant   -->
+<!-- // Le montant de TVA correspondant  -->
 <h2>Details facture</h2>
 <%if(locals.details){%>
    <form action="/validligne" method="post">
-<ul>
-   <%details.forEach(detail => {%>
-      <li>
-         <input type="text" value="<%= detail.id %>">
-
-         <label for="labelLabel">label</label>
-         <input type="text" value="<%= detail.item_label %>" disabled>
-
-         <label for="labelDesc">Description</label>
-         <input type="text" value="<%= detail.item_description %>" disabled>
-
-         <label for="labelPrix">Prix unitaire</label>
-         <input type="text" value="<%= detail.item_retail_price %>" disabled>
-
-         <label for="qtyArt">quantité</label>
-         <input type="text" name="inputQty<%= detail.id %>" value="1">
-
-         <label for="remOpt">remise optionnelle</label>
-         <input type="text" name="inputOpt<%= detail.id %>" value="1">
-
-         <label for="thtv">Taux TVA</label>
-         <input type="text" value="<%= detail.vat_percentage %>" disabled>
-      </li>
-      <%});%>
-   </ul>
-   <input type="submit" value="Valider detail">
-</form>
-<%}%>
-
-<%if(locals.factureDetails){%>
-   <ul>
-      <%factureDetails.forEach(detail => {%>
+      <ul>
+         <%details.forEach(detail => {%>
+            <li>
+               <input type="text" value="<%= detail.id %>">
+               
+               <label for="labelLabel">label</label>
+               <input type="text" value="<%= detail.item_label %>" disabled>
+               
+               <label for="labelDesc">Description</label>
+               <input type="text" value="<%= detail.item_description %>" disabled>
+               
+               <label for="labelPrix">Prix unitaire</label>
+               <input type="text" value="<%= detail.item_retail_price %>" disabled>
+               
+               <label for="qtyArt">quantité</label>
+               <input type="text" name="inputQty<%= detail.id %>" value="1">
+               
+               <label for="remOpt">remise optionnelle</label>
+               <input type="text" name="inputOpt<%= detail.id %>" value="1">
+               
+               <label for="thtv">Taux TVA</label>
+               <input type="text" value="<%= detail.vat_percentage %>" disabled>
+            </li>
+            <%});%>
+         </ul>
+         <input type="submit" value="Valider detail">
+      </form>
+      <%}%>
+      
+      <%if(locals.factureDetails){%>
+         <ul>
+            <%factureDetails.forEach(detail => {%>
          <li>
             <label for="numLigne">Ligne</label>
             <input type="text" disabled value="<%= detail.line_number %>">
-      
+            
             <label for="finalDes">Description</label>
             <input type="text" disabled value="<%= detail.item_label %> (<%= detail.item_description %>)">
-      
+            
             <label for="finalQty">Quantité</label>
             <input type="text" disabled value="<%= detail.qty %>">
-      
+            
             <label for="finalOpt">Remise opt</label>
             <input type="text" disabled value="<%= detail.discount %>">
-      
+            
             <label for="finalTotHtva">Total HTVA</label>
             <input type="text" disabled value="<%= detail.totHtva %>">
          </li>
-      <%})%>
-   </ul>
+         <%})%>
+      </ul>
+      <%}%>
+      
+      <!-- // Le total des bases imposables => Montant Total Hors TVA  -->
+      <!-- // Le Montant total de la TVA  -->
+      <!-- // Le Montant total TVA Comprise => TTC -->
+      <h2>Totaux</h2>
+      
+      <%if(locals.totHtva){%>
+         <label for="mthtva">Montant Total Hors TVA</label>
+         <input type="text" disabled value="<%= totHtva %>">
+         <%}%>
+         
+         <%if(locals.base21 && locals.base6 && locals.tva){%>
+            <label for="base21">21%</label>
+            <input type="text" value="<%= base21 %>" disabled>
+            
+            <label for="base6">6%</label>
+            <input type="text" value="<%= base6 %>" disabled>
+            
+            <label for="mttvac">Montant total TVA Comprise</label>
+            <input type="text" disabled value="<%= totTvac %>">
+            
+            <label for="mttva">Dont TVA</label>
+            <input type="text" disabled value="<%= tva %>">
 <%}%>
-
-<!-- // Le total des bases imposables => Montant Total Hors TVA  -->
-<!-- // Le Montant total de la TVA  -->
-<!-- // Le Montant total TVA Comprise => TTC -->
-<h2>Totaux</h2>
-
-<label for="mthtva">Montant Total Hors TVA</label>
-<input type="text">
-
-<%if(locals.base21 || locals.base6){%>
-
-   <label for="base21">21%</label>
-   <input type="text" value="<%= base21 %>">
-   
-   <label for="base6">6%</label>
-   <input type="text" value="<%= base6 %>">
-<%}%>
-
-<label for="mttvac">Montant total TVA Comprise</label>
-<input type="text">
-
-<label for="mttva">Dont TVA</label>
-<input type="text">
-
+<form action="/validfacture" method="post">
+   <input type="submit" value="Enregistrer la facture">
+</form>
 <%- include("partials/footer.ejs") %>
