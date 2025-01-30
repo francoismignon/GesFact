@@ -1,8 +1,8 @@
 <%- include("partials/header.ejs") %>
    <!-- // Génération d’un n° de facture unique -->
-   <%if(locals.newInvNum){%>
+   <%if(locals.invNum){%>
       <label for="invNum">Numero de facture</label>
-      <input type="text" name="inv_num" id="invNum" value="<%= newInvNum %>" disabled>
+      <input type="text" name="inv_num" id="invNum" value="<%= invNum %>" disabled>
       <%}%>
       <%if(locals.fullDate){%>
          
@@ -32,10 +32,10 @@
             <input type="text" name="searchclientField">
             <input type="submit" value="OK">
          </form>
-         <%if(locals.clients){%>
+         <%if(locals.customers){%>
             <ul>
-               <%clients.forEach(client => {%>
-                     <li><input type="radio" name="selectClient" id="checkboxName<%= client.id %>" value="<%= client.id %>"><label for="checkboxName<%= client.id %>"><%= client.nom %> <%= client.prenom %></label></li>
+               <%customers.forEach(customer => {%>
+                     <li><input type="radio" name="selectClient" id="checkboxName<%= customer.id %>" value="<%= customer.id %>"><label for="checkboxName<%= customer.id %>"><%= customer.cust_lastname %> <%= customer.cust_firstname %></label></li>
                   <%});%>
                </ul>
                <%}%>
@@ -45,7 +45,7 @@
                <!-- // Une table détail facture qui contient les différentes lignes de la facture  -->
                <h2>Recherche articles</h2>
                <!-- // La sélection d'article à partir d’une liste avec recherche sur n° d’article / n° article du fournisseur / nom de l’article  -->
-               <form action="/searcharticle" method="post">
+               <form action="/searchitem" method="post">
                   <fieldset>
                      <legend>recherche article sur</legend>
                      <input type="radio" name="searchItem" id="numArt" value="item_number">
@@ -66,7 +66,7 @@
                <li>
                   <form action="/addtodetails" method="post">
                      <input type="text" name="id" value="<%= item.id %>">
-                     <%= item.label %> <%= item.description %> <input type="submit" value="Ajouter">
+                     <%= item.item_label %> <%= item.item_description %> <input type="submit" value="Ajouter">
                   </form>
                </li>
                <% });%>

@@ -1,16 +1,16 @@
 <%- include("partials/header.ejs") %>
-<%if(locals.facturesByDate && locals.facturesByNum){%>
+<%if(locals.invoices){%>
     <input id="btnByNum" type="button" value="Trier par numero de facture" class="active">
     <input id="btnByDate" type="button" value="Trier par date">
 <ul id="sortByDate" class="hidden">
-    <%facturesByDate.forEach(facture => {%>
-    <li><%= facture.inv_date %></li>
+    <%invoices.forEach(invoice => {%>
+    <li><%= invoice.inv_date %></li>
     <%});%>
 </ul>
 
 <ul id="sortByNum">
-    <%facturesByNum.forEach(facture => {%>
-    <li><%= facture.inv_number %></li>
+    <%invoices.forEach(invoice => {%>
+    <li><%= invoice.inv_number %></li>
     <%});%>
 </ul>
 <%}%>
@@ -35,10 +35,10 @@
     <input type="submit" value="OK">
 </form>
 
-<%if(locals.factures){%>
-    <%factures.forEach(facture => {%>
+<%if(locals.invoicesBy){%>
+    <%invoicesBy.forEach(invoice => {%>
         <ul>
-            <li><%= facture.inv_number %> <%= facture.cust_lastname %> <%= facture.inv_date %></li>
+            <li><%= invoice.inv_number %> <%= invoice.cust_lastname %> <%= invoice.inv_date %></li>
         </ul>
     <%});%>
 <%}%>

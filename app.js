@@ -1,15 +1,7 @@
 import express from "express";
-import bodyParser from "body-parser";
-import pg from "pg";
-
-const db = new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    database: "gesfactDB",
-    password: "angusmg",
-    port: 5432,
-});
-db.connect();
+import InvoiceController from "./controllers/invoiceController.js";
+import CustomerController from "./controllers/customerController.js"
+import ItemController from "./controllers/itemController.js"
 
 const app = express();
 const port = 3000;
@@ -27,7 +19,7 @@ let tva6 = 0;
 let newInvNum;
 let fullDate;
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 function computeUnitHtva(montant, quantite){
@@ -44,100 +36,30 @@ function computeTva(prixHtva, tva){
     return result;
 }
 
-app.get("/", async (req, res) => {
-    const resultByDate = await db.query("SELECT * FROM invoice ORDER BY inv_date ASC");
-    const resultByNum = await db.query("SELECT * FROM invoice ORDER BY inv_number ASC");
-    const result = await db.query("SELECT inv_number FROM invoice ORDER BY inv_number DESC");
-    //On retient quelle est le derniere numero de factures pour pouvoir l'incrementé de 1 lors de la creation de la prochaine facture
-    lastInvNum = result.rows[0].inv_number;
-    const facturesByDate = resultByDate.rows;
-    const facturesByNum = resultByNum.rows;
-    res.render("index.ejs", {
-        facturesByDate,
-        facturesByNum,
-        factures
-    });
-});
+app.get("/", InvoiceController.getAllInvoice);
+app.get("/new", InvoiceController.showNewInvoiceForm);
+app.post("/search", InvoiceController.getInvoiceBy);
+app.post("/searchclient", CustomerController.getCustomerBy);
+app.post("/searchitem", ItemController.getItemBy);
 
-app.post("/search", async (req, res) => {
-    let param = "";
-    if (req.body.searchDate) {
-        param = req.body.searchDate
-    } else {
-        param = req.body.searchField
-    }
-    const result = await db.query(`SELECT * FROM invoice AS i FULL OUTER JOIN customers AS c ON i.cust_id = c.id WHERE ${req.body.searchSelect} = $1 ORDER BY inv_number ASC`, [param]);
-    factures = [];
-    result.rows.forEach(facture => {
-        const date = facture.inv_date;
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear().toString();
-        let dayStr;
-        let monthStr;
-
-        (day < 10) ? dayStr = "0" + day.toString() : dayStr = day.toString();
-        (month < 10) ? monthStr = "0" + month.toString() : monthStr = month.toString();
-
-        const fullDate = `${dayStr}-${monthStr}-${year}`;
-        facture.inv_date = fullDate;
-        factures.push(facture);
-    });
-    res.redirect("/");
-});
-
-app.get("/new", async (req, res) => {
-    lastInvNum++;
-    const date = new Date();
-    const day = (date.getDate() < 10) ? "0" + date.getDate() : date.getDate();
-    const month = ((date.getMonth() + 1) < 10) ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-    const year = date.getFullYear()
-    fullDate = day + "/" + month + "/" + year;
-    newInvNum = lastInvNum.toString();
-    res.render("facture.ejs", {
-        newInvNum,
-        fullDate
-    }
-    );
-});
-
-app.post("/searchclient", async(req, res)=>{
-    const result = await db.query(`SELECT * FROM customers WHERE ${req.body.searchclient} = $1`, [req.body.searchclientField]);
-    clients=[];
-    result.rows.forEach(client => {
-        clients.push({
-            id: client.id,
-            nom : client.cust_lastname,
-            prenom : client.cust_firstname
-        });
-    });
-    res.render("facture.ejs", {
-        clients, 
-        items,
-        details,
-        newInvNum,
-        fullDate
-    });
-});
-
-app.post("/searcharticle", async(req, res)=>{
-    const result = await db.query(`SELECT * FROM item WHERE ${req.body.searchItem} = $1`, [req.body.searchItemField]);
-    items = [];
-    result.rows.forEach(item => {
-        items.push({
-            id: item.id,
-            label: item.item_label,
-            description: item.item_description
-        })
-    });
-    res.render("facture.ejs", {
-        items,
-        clients,
-        details,
-        newInvNum,
-        fullDate
-    });
-});
+// app.post("/searcharticle", async(req, res)=>{
+//     const result = await db.query(`SELECT * FROM item WHERE ${req.body.searchItem} = $1`, [req.body.searchItemField]);
+//     items = [];
+//     result.rows.forEach(item => {
+//         items.push({
+//             id: item.id,
+//             label: item.item_label,
+//             description: item.item_description
+//         })
+//     });
+//     res.render("facture.ejs", {
+//         items,
+//         clients,
+//         details,
+//         newInvNum,
+//         fullDate
+//     });
+// });
 
 app.post("/addtodetails", async(req, res)=>{
     const id = req.body.id;
