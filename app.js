@@ -41,40 +41,7 @@ app.get("/new", InvoiceController.showNewInvoiceForm);
 app.post("/search", InvoiceController.getInvoiceBy);
 app.post("/searchclient", CustomerController.getCustomerBy);
 app.post("/searchitem", ItemController.getItemBy);
-
-// app.post("/searcharticle", async(req, res)=>{
-//     const result = await db.query(`SELECT * FROM item WHERE ${req.body.searchItem} = $1`, [req.body.searchItemField]);
-//     items = [];
-//     result.rows.forEach(item => {
-//         items.push({
-//             id: item.id,
-//             label: item.item_label,
-//             description: item.item_description
-//         })
-//     });
-//     res.render("facture.ejs", {
-//         items,
-//         clients,
-//         details,
-//         newInvNum,
-//         fullDate
-//     });
-// });
-
-app.post("/addtodetails", async(req, res)=>{
-    const id = req.body.id;
-    const result = await db.query("SELECT i.id, i.item_label, i.item_description, i.item_retail_price, v.vat_percentage  FROM item AS i INNER JOIN vattype AS vt ON i.vat_type_id = vt.id INNER JOIN vat AS v ON v.vat_type_id = vt.id WHERE i.id = $1", [id]);
-    result.rows.forEach(itemVat => {
-        details.push(itemVat);
-    });
-    res.render("facture.ejs", {
-        clients,
-        details,
-        newInvNum,
-        fullDate
-    });
-
-});
+app.post("/addtodetails", ItemController.getItemVat);
 
 app.post("/validligne", async(req, res)=>{
     let factureDetails = [];

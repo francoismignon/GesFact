@@ -81,30 +81,30 @@
 <!-- // Le taux de TVA correspondant   -->
 <!-- // Le montant de TVA correspondant  -->
 <h2>Details facture</h2>
-<%if(locals.details){%>
+<%if(locals.itemsVat){%>
    <form action="/validligne" method="post">
       <ul>
-         <%details.forEach(detail => {%>
+         <%itemsVat.forEach(itemVat => {%>
             <li>
-               <input type="text" value="<%= detail.id %>">
+               <input type="text" value="<%= itemVat.id %>">
                
                <label for="labelLabel">label</label>
-               <input type="text" value="<%= detail.item_label %>" disabled>
+               <input type="text" value="<%= itemVat.item_label %>" disabled>
                
                <label for="labelDesc">Description</label>
-               <input type="text" value="<%= detail.item_description %>" disabled>
+               <input type="text" value="<%= itemVat.item_description %>" disabled>
                
                <label for="labelPrix">Prix unitaire</label>
-               <input type="text" value="<%= detail.item_retail_price %>" disabled>
+               <input type="text" value="<%= itemVat.item_retail_price %>" disabled>
                
                <label for="qtyArt">quantité</label>
-               <input type="text" name="inputQty<%= detail.id %>" value="1">
+               <input type="text" name="inputQty<%= itemVat.id %>" value="1">
                
                <label for="remOpt">remise optionnelle</label>
-               <input type="text" name="inputOpt<%= detail.id %>" value="1">
+               <input type="text" name="inputOpt<%= itemVat.id %>" value="1">
                
                <label for="thtv">Taux TVA</label>
-               <input type="text" value="<%= detail.vat_percentage %>" disabled>
+               <input type="text" value="<%= itemVat.vat_percentage %>" disabled>
             </li>
             <%});%>
          </ul>
