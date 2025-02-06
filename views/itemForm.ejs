@@ -1,0 +1,26 @@
+<%- include('partials/header.ejs', { title: mode === 'add' ? 'Ajouter un article' : 'Modifier un article' }) %>
+<h1><%= mode === 'add' ? 'Ajouter un article' : 'Modifier un article' %></h1>
+<form method="POST" action="<%= mode === 'add' ? '/items/add' : '/items/edit/' + (item ? item.id : '') %>">
+  <div class="form-group">
+    <label>Numéro de l'article :</label>
+    <input type="text" name="item_number" value="<%= item ? item.item_number : '' %>" class="form-control" required>
+  </div>
+  <div class="form-group">
+    <label>EAN de l'article :</label>
+    <input type="text" name="item_ean" value="<%= item ? item.item_ean : '' %>" class="form-control">
+  </div>
+  <div class="form-group">
+    <label>Label :</label>
+    <input type="text" name="item_label" value="<%= item ? item.item_label : '' %>" class="form-control" required>
+  </div>
+  <div class="form-group">
+    <label>Prix de vente :</label>
+    <input type="number" step="0.01" name="item_retail_price" value="<%= item ? item.item_retail_price : '' %>" class="form-control" required>
+  </div>
+  <div class="form-group">
+    <label>ID Type TVA :</label>
+    <input type="number" name="vat_type_id" value="<%= item ? item.vat_type_id : '' %>" class="form-control">
+  </div>
+  <button type="submit" class="btn btn-primary">Sauvegarder</button>
+</form>
+<%- include('partials/footer.ejs') %>

@@ -1,5 +1,6 @@
 import pg from "pg";
 
+// Création d'un client PostgreSQL avec les informations de connexion
 const db = new pg.Client({
     user: "postgres",
     host: "localhost",
@@ -7,6 +8,6 @@ const db = new pg.Client({
     password: "angusmg",
     port: 5432
 });
-db.connect();
+db.connect(); // Connexion à la base de données
 
 export default db;

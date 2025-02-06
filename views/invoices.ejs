@@ -1,15 +1,15 @@
 <%- include("partials/header.ejs", {title: "Factures"}) %>
-<form action="/invoices" method="get">
-    <input type="text" id="dynamicInput" name="search" value="<%= search %>">
-    <select name="sort" id="sortSelect">
+<form action="/invoices" method="get" class="form-inline mb-3">
+    <input type="text" id="dynamicInput" name="search" value="<%= search %>" class="form-control mr-2">
+    <select name="sort" id="sortSelect" class="form-control mr-2">
         <option value="">Trier par</option>
-        <option value="date" <%= sort === 'date'?'selected':'' %>>Date</option>
-        <option value="number" <%= sort === 'number'?'selected':''%>>Numéro de facture</option>
+        <option value="date" <%= sort === 'date' ? 'selected' : '' %>>Date</option>
+        <option value="number" <%= sort === 'number' ? 'selected' : '' %>>Numéro de facture</option>
     </select>
-    <input type="submit" value="Recherche">
-    <a href="/invoices/add" class="btn">Ajouter une facture</a>
+    <input type="submit" value="Recherche" class="btn btn-secondary mr-2">
+    <a href="/invoices/add" class="btn btn-primary">Ajouter une facture</a>
 </form>
-<table class="table">
+<table class="table table-bordered">
     <thead>
       <tr>
         <th>Numéro</th>
@@ -21,7 +21,7 @@
       </tr>
     </thead>
     <tbody>
-      <%invoices.forEach(invoice => {%>
+      <% invoices.forEach(invoice => { %>
         <tr>
           <td><%= invoice.inv_number %></td>
           <td><%= invoice.inv_date %></td>
@@ -29,11 +29,15 @@
           <td><%= invoice.cust_lastname %> <%= invoice.cust_firstname %></td>
           <td><%= invoice.cust_number %></td>
           <td>
-            <a href="/invoices/edit/<%= invoice.id %>" class="btn">Modifier</a>
+            <% if (invoice.flag_accounting == 0) { %>
+              <a href="/invoices/edit/<%= invoice.id %>" class="btn btn-primary">Modifier</a>
+            <% } else { %>
+              <span class="btn btn-secondary disabled">Comptabilisée</span>
+            <% } %>
           </td>
         </tr>
       <% }); %>
     </tbody>
-  </table>
-  <script src="/js/invoices.js"></script>
-  <%- include("partials/footer.ejs") %>
+</table>
+<script src="/js/invoices.js"></script>
+<%- include("partials/footer.ejs") %>

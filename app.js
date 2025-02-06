@@ -1,43 +1,40 @@
 import express from "express";
 import InvoiceController from "./controllers/invoiceController.js";
+import CustomerController from "./controllers/customerController.js";
+import ItemController from "./controllers/itemController.js";
 
 const app = express();
 const port = 3000;
 
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-//Page Principale
-app.get("/", (req, res)=>{
-    res.render("home.ejs");
+// Page Principale
+app.get("/", (req, res) => {
+  res.render("home.ejs");
 });
-//Routes invoices
+
+// Routes Factures
 app.get("/invoices", InvoiceController.showListInvoices);
 app.get("/invoices/add", InvoiceController.showAddInvoiceForm);
 app.post("/invoices/add", InvoiceController.addInvoice);
-//Routes customers
-app.get("/customers");
-//Routes items
-app.get("/items");
+app.get("/invoices/edit/:id", InvoiceController.showEditInvoiceForm);
+app.post("/invoices/edit/:id", InvoiceController.updateInvoice);
 
-// const date = new Date();
-// const formattedDate = date.toISOString().split('T')[0].replace(/-/g, ' ');
-// console.log(new Date().toISOString().split('T')[0]);
-// let test = "bonjour";
-// console.log(test);
-// test = [test];
-// console.log(test);
-// test = [test];
-// // console.log(test);
-// let summary = {};
-// let test = "test";
-// let id = "id";
-// summary[id] = 0;
-// // summary.id = 0;
-// summary[test] = "bonjour";
-// console.log(summary)
+// Routes Clients
+app.get("/customers", CustomerController.showListCustomers);
+app.get("/customers/add", CustomerController.showAddCustomerForm);
+app.post("/customers/add", CustomerController.addCustomer);
+app.get("/customers/edit/:id", CustomerController.showEditCustomerForm);
+app.post("/customers/edit/:id", CustomerController.updateCustomer);
 
+// Routes Articles
+app.get("/items", ItemController.showListItems);
+app.get("/items/add", ItemController.showAddItemForm);
+app.post("/items/add", ItemController.addItem);
+app.get("/items/edit/:id", ItemController.showEditItemForm);
+app.post("/items/edit/:id", ItemController.updateItem);
 
-app.listen(port, ()=>{
-    console.log(`Le serveur a démarrer sur http://127.0.0.1:${port}`);
+app.listen(port, () => {
+  console.log(`Le serveur a démarré sur http://127.0.0.1:${port}`);
 });

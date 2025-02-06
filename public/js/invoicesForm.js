@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // --- Recherche de clients ---
     searchCustomer.addEventListener('input', function () {
         const search = this.value.toLowerCase().trim();
+        // Sécurisation de la chaîne de recherche pour le regex
         const safeSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const regex = new RegExp(safeSearch);
         let found = false;

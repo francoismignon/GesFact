@@ -1,7 +1,7 @@
-<%- include('partials/header', { title: 'Liste des Clients' }) %>
+<%- include('partials/header.ejs', { title: 'Liste des Clients' }) %>
 <h1>Liste des Clients</h1>
-<a href="/customers/add" class="btn">Ajouter un client</a>
-<table class="table">
+<a href="/customers/add" class="btn btn-primary mb-3">Ajouter un client</a>
+<table class="table table-bordered">
   <thead>
     <tr>
       <th>ID</th>
@@ -25,10 +25,10 @@
         <td><%= customer.cust_vat_number %></td>
         <td><%= customer.cust_mail %></td>
         <td>
-          <a href="/customers/edit/<%= customer.id %>" class="btn">Modifier</a>
+          <a href="/customers/edit/<%= customer.id %>" class="btn btn-secondary">Modifier</a>
         </td>
       </tr>
     <% }); %>
   </tbody>
 </table>
-<%- include('partials/footer') %>
+<%- include('partials/footer.ejs') %>
