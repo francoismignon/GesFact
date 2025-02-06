@@ -30,18 +30,16 @@
         <td><%= invoice.cust_number %></td>
         <td>
           <% if (invoice.flag_accounting == 0) { %>
-            <!-- Bouton Modifier si pas comptabilisée -->
-            <a href="/invoices/edit/<%= invoice.id %>" class="btn btn-primary">Modifier</a>
-            
-            <!-- Bouton Comptabiliser -->
-            <form action="/invoices/accounting/<%= invoice.id %>" method="POST" style="display:inline;">
-              <button type="submit" class="btn btn-success">Comptabiliser</button>
-            </form>
+            <div class="btn-group" role="group">
+              <a href="/invoices/edit/<%= invoice.id %>" class="btn btn-primary">Modifier</a>
+              <form action="/invoices/accounting/<%= invoice.id %>" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-success ml-2">Comptabiliser</button>
+              </form>
+            </div>
           <% } else { %>
-            <!-- Facture comptabilisée -> boutons désactivés -->
             <span class="btn btn-secondary disabled">Comptabilisée</span>
           <% } %>
-        </td>
+        </td>        
       </tr>
     <% }); %>
   </tbody>

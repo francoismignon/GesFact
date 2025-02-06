@@ -10,12 +10,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // On récupère le template HTML pour une nouvelle ligne
     const templateHTML = document.querySelector('#invoice-line-template').innerHTML;
 
-    // Si une première ligne existe déjà dans le HTML, on y attache les événements
-    const firstRow = document.querySelector('#invoice-details tbody tr');
-    if (firstRow) {
-        addListener(firstRow);
-        recalc(); // Met à jour le résumé dès le chargement
-    }
+    // // Si une première ligne existe déjà dans le HTML, on y attache les événements
+    // const firstRow = document.querySelector('#invoice-details tbody tr');
+    // if (firstRow) {
+    //     addListener(firstRow);
+    //     recalc(); // Met à jour le résumé dès le chargement
+    // }
+    // Au lieu de seulement firstRow :
+    const allRows = document.querySelectorAll('#invoice-details tbody tr');
+    allRows.forEach(row => {
+        addListener(row);
+        recalc();
+    });
 
     // --- Ajout d'une nouvelle ligne ---
     addLineBtn.addEventListener("click", () => {
