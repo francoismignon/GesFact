@@ -1,27 +1,89 @@
+/* Import de belles polices */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container amélioré */
+.container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin: 40px auto;
+  max-width: 1100px;
+}
+
+/* Typographie améliorée */
+h1, h2 {
+  font-weight: 600;
+  color: #2d3436;
+}
+h3, h4 {
+  font-weight: 400;
+  color: #2d3436;
+}
+
+/* Header modernisé */
+header {
+  background: linear-gradient(90deg, #1e88e5, #42a5f5);
+  padding: 20px;
+  text-align: center;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 600;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+header a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+header a:hover {
+  text-decoration: underline;
+}
+
+/* Boutons avec une transition douce */
+.btn-primary {
+  background-color: #1e88e5;
+  border: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.btn-primary:hover {
+  background-color: #42a5f5;
+}
+
+/* Tables modernisées */
 .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 15px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.table thead {
+  background: #e3f2fd;
+  font-weight: 600;
+}
+.table tbody tr:hover {
+  background: #f1f8ff;
 }
 
-.table th,
-.table td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-}
-
-.btn {
-    display: inline-block;
-    padding: 8px 15px;
-    background: #333;
-    color: #fff;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.btn:hover {
-    background: #555;
+/* Footer modernisé */
+footer {
+  background: #1e88e5;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 30px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
 }
