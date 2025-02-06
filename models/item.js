@@ -9,5 +9,9 @@ class Item {
         const items = await db.query("SELECT * FROM item");
         return items.rows;
     }
+    static async fetchItemById(id){
+        const item = await db.query("SELECT * FROM item WHERE id = $1", [id]);
+        return item.rows
+    }
 }
 export default Item;

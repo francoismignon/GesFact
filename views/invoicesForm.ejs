@@ -6,16 +6,17 @@
     <p>Numero de Facture: <%- mode === 'add'?'<em>Auto-généré lors de l\'enregistrement</em>':'invoice.inv_number' %></p>
     <!-- Dates -->
     <label>Date d'émission :</label>
-    <input type="date" name="dateEm" value="<%= invoice ? invoice.inv_date : '' %>">
+    <input type="date" name="date_emission" value="<%= invoice ? invoice.inv_date : new Date().toISOString().split('T')[0] %>">
 
     <label>Date d'écheance</label>
-    <input type="date" name="dateEch" value="<%= invoice ? invoice.inv_duedate : '' %>">
-    <p>Par défaut, 30 jours après la date d'émission</p>
+    <input type="date" name="date_echeance" value="<%= invoice ? invoice.inv_duedate : '' %>">
+    <small>Par défaut, 30 jours après la date d'émission</small>
+    <p></p>
 
     <!-- Selection du client par  n° de client / nom de client/ n° de tva du client  -->
      <label>Client: </label>
      <input type="text" name="searchCustomer" placeholder="Recherche" id="searchCustomer">
-     <select id="selectCustomer">
+     <select name="cust_id" id="selectCustomer">
         <%customers.forEach(customer=>{%>
             <option value="<%= customer.id %>">
                 <%= customer.cust_number %> - <%= customer.cust_lastname %> <%= customer.cust_firstname %> - <%= customer.cust_vat_number %>
