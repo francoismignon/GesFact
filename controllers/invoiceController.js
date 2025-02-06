@@ -114,12 +114,12 @@ class InvoiceController {
       const items = await Item.fetchAllItemsWithVat();
     //   console.log(items);
       console.log(customers);
-    //   res.render("invoicesForm.ejs", {
-    //     customers,
-    //     items,
-    //     mode: "edit",
-    //     invoice
-    //   });
+      res.render("invoicesForm.ejs", {
+        customers,
+        items,
+        mode: "edit",
+        invoice
+      });
     } catch (error) {
       console.log(error);
     }

@@ -1,7 +1,31 @@
 <%- include("partials/header.ejs", {title: "Accueil"}) %>
-<div class="mb-3">
-  <a href="/invoices" class="btn btn-primary">Factures</a>
-  <a href="/customers" class="btn btn-primary">Clients</a>
-  <a href="/items" class="btn btn-primary">Articles</a>
+
+<div class="container home-container">
+    <h2 class="home-title">Bienvenue sur le Gestionnaire de Factures</h2>
+    <p class="home-subtitle">Accédez rapidement aux sections principales :</p>
+
+    <div class="home-grid">
+        <a href="/invoices" class="home-card">
+            <div class="home-card-content">
+                <h3>📜 Factures</h3>
+                <p>Gérez et consultez vos factures.</p>
+            </div>
+        </a>
+        
+        <a href="/customers" class="home-card">
+            <div class="home-card-content">
+                <h3>👥 Clients</h3>
+                <p>Ajoutez et modifiez les informations des clients.</p>
+            </div>
+        </a>
+        
+        <a href="/items" class="home-card">
+            <div class="home-card-content">
+                <h3>📦 Articles</h3>
+                <p>Gérez les articles disponibles pour la facturation.</p>
+            </div>
+        </a>
+    </div>
 </div>
+
 <%- include("partials/footer.ejs") %>

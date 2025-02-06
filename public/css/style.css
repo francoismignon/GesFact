@@ -87,3 +87,68 @@ footer {
   border-top-right-radius: 10px;
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
 }
+
+/* HOME PAGE STYLING */
+.home-container {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.home-title {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #2d3436;
+  margin-bottom: 10px;
+}
+
+.home-subtitle {
+  font-size: 1.2rem;
+  color: #636e72;
+  margin-bottom: 30px;
+}
+
+/* Grille des cartes avec un bon espacement */
+.home-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+/* Cartes interactives */
+.home-card {
+  text-decoration: none; /* Supprime le soulignement */
+  background: linear-gradient(135deg, #1e88e5, #42a5f5);
+  color: white;
+  padding: 20px;
+  width: 260px;
+  border-radius: 12px;
+  text-decoration: none;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.home-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.home-card-content h3 {
+  font-size: 1.6rem;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.home-card-content p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.home-card:hover, .home-card:focus, .home-card:active {
+  text-decoration: none; /* Assure qu'il ne réapparaît pas au survol ou en étant actif */
+  color: white;
+}
+
+
