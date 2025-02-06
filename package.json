@@ -1,7 +1,7 @@
 {
-  "name": "gesfact",
+  "name": "easybillmanager",
   "version": "1.0.0",
-  "description": "Gestion simple de facture",
+  "description": "Application Web Simple de gestion de Factures",
   "main": "app.js",
   "type": "module",
   "scripts": {
@@ -10,7 +10,6 @@
   "author": "Mignon François",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.3",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "pg": "^8.13.1"

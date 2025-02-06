@@ -1,49 +1,53 @@
-import Invoice from "../models/invoice.js"
+import Invoice from "../models/Invoice.js";
+import Customer from "../models/customer.js";
+import Item from "../models/item.js";
 
 class InvoiceController{
-    //Affiche la page de creation de facture
-    static async showNewInvoiceForm(req, res){
+    //Enregistré la facture
+    static async saveInvoice(req, res){
+        console.log(req.body.selectItem);
+    }
+    //Vers la nouvelle factures
+    static async showAddInvoiceForm(req, res){
         try {
-            const lastInvNum = await Invoice.fetchLastInvNumber();
-            const invNum = parseInt(lastInvNum[0].inv_number) + 1;
-            const date = new Date();
-            const day = (date.getDate() < 10) ? "0" + date.getDate() : date.getDate();
-            const month = ((date.getMonth() + 1) < 10) ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-            const year = date.getFullYear()
-            const fullDate = day + "/" + month + "/" + year;
-            
-            res.render("facture.ejs", {
-                invNum,
-                fullDate
+            const customers = await Customer.fetchAllCustomers();
+            const items = await Item.fetchAllItemsWithVat();
+
+            res.render("invoicesForm.ejs", {
+                customers,
+                items,
+                mode: "add",
+                invoice: null // renvoie null pour eviter les erreur de reference dans le front
             })
         } catch (error) {
             console.log(error);
         }
     }
-    //fonction qui liste toute les factures
-    static async getAllInvoice(req, res){
-        const invoices = await Invoice.fetchAllInvoice();
-        res.render("index.ejs", {invoices});
-    }
-    //fonction qui filtre par numero de factures
-    static async getInvoiceBy(req, res){
+    //Methode pour afficher et trier la liste de factures
+    static async showListInvoices(req, res){
         try {
-            let invoicesBy;
-            const invoices = await Invoice.fetchAllInvoice();
-            if (req.body.searchSelect === "inv_number") {
-                invoicesBy = await Invoice.fetchInvoiceByInvNum(req.body.searchField);
-            } 
-            else if(req.body.searchSelect === "inv_date"){
-                invoicesBy = await Invoice.fetchInvoiceByDate(req.body.searchDate);
+            const search = req.query.search;
+            const sort= req.query.sort;
+            // console.log(search);
+            // console.log(sort);
+            let invoices = [];
+            switch (sort) {
+                case "date":
+                    invoices = await Invoice.fetchInvoiceByInvoiceDate(search);                    
+                    break;
+                case "number":
+                    invoices = await Invoice.fetchInvoiceByInvoiceNumber(search);
+                    break;
+            
+                default:
+                    invoices = await Invoice.fetchAllInvoicesWithLinkCustomer();
+                    break;
             }
-            else if(req.body.searchSelect === "cust_lastname"){
-                invoicesBy = await Invoice.fetchInvoiceByCustLastName(req.body.searchField);
-            } else {
-                invoicesBy = await Invoice.fetchInvoiceByCustNumber(req.body.searchField);
-            }
-            res.render("index.ejs", {
+            // console.log(invoices);
+            res.render("invoices.ejs", {
                 invoices,
-                invoicesBy
+                search,
+                sort
             });
         } catch (error) {
             console.log(error);

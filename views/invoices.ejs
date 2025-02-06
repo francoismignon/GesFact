@@ -1,0 +1,39 @@
+<%- include("partials/header.ejs", {title: "Factures"}) %>
+<form action="/invoices" method="get">
+    <input type="text" id="dynamicInput" name="search" value="<%= search %>">
+    <select name="sort" id="sortSelect">
+        <option value="">Trier par</option>
+        <option value="date" <%= sort === 'date'?'selected':'' %>>Date</option>
+        <option value="number" <%= sort === 'number'?'selected':''%>>Numéro de facture</option>
+    </select>
+    <input type="submit" value="Recherche">
+    <a href="/invoices/add" class="btn">Ajouter une facture</a>
+</form>
+<table class="table">
+    <thead>
+      <tr>
+        <th>Numéro</th>
+        <th>Date d'émission</th>
+        <th>Date d'échéance</th>
+        <th>Client</th>
+        <th>Numéro de client</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%invoices.forEach(invoice => {%>
+        <tr>
+          <td><%= invoice.inv_number %></td>
+          <td><%= invoice.inv_date %></td>
+          <td><%= invoice.inv_duedate %></td>
+          <td><%= invoice.cust_lastname %> <%= invoice.cust_firstname %></td>
+          <td><%= invoice.cust_number %></td>
+          <td>
+            <a href="/invoices/edit/<%= invoice.id %>" class="btn">Modifier</a>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <script src="/js/invoices.js"></script>
+  <%- include("partials/footer.ejs") %>

@@ -1,0 +1,106 @@
+<%- include("partials/header.ejs", {title: mode === 'add' ? 'Nouvelle factures':'Modifier facture'}) %>
+<h2><%= mode === 'add'?'Ajouter':'Modifier' %> Facture</h2>
+<!-- si on ajoute, alors route = add, si on modifier alors route = edit + id facture -->
+<form action="<%= mode === 'add'?'/invoices/add':'/invoices/edit/' + (invoice?invoice.id:'') %>" method="post">
+    <!-- Numero de facture -->
+    <p>Numero de Facture: <%- mode === 'add'?'<em>Auto-généré lors de l\'enregistrement</em>':'invoice.inv_number' %></p>
+    <!-- Dates -->
+    <label>Date d'émission :</label>
+    <input type="date" name="dateEm" value="<%= invoice ? invoice.inv_date : '' %>">
+
+    <label>Date d'écheance</label>
+    <input type="date" name="dateEch" value="<%= invoice ? invoice.inv_duedate : '' %>">
+    <p>Par défaut, 30 jours après la date d'émission</p>
+
+    <!-- Selection du client par  n° de client / nom de client/ n° de tva du client  -->
+     <label>Client: </label>
+     <input type="text" name="searchCustomer" placeholder="Recherche" id="searchCustomer">
+     <select id="selectCustomer">
+        <%customers.forEach(customer=>{%>
+            <option value="<%= customer.id %>">
+                <%= customer.cust_number %> - <%= customer.cust_lastname %> <%= customer.cust_firstname %> - <%= customer.cust_vat_number %>
+            </option>
+        <%});%>
+        <option value="" hidden>Aucun client n'as été trouvé</option>
+     </select>
+<h2>Détails de Facture</h2>
+<table class="table" id="invoice-details">
+    <thead>
+        <tr>
+            <th>Ligne</th>
+            <th>Article</th>
+            <th>Quantité</th>
+            <th>Remise(%)</th>
+            <th>Total HTVA</th>
+            <!-- <th>Action</th> -->
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="line-number">1</td>
+            <td>
+                <input type="text" placeholder="Recherche" id="searchItem">
+                <!-- La sélection d'article à partir d’une liste avec recherche sur n° d’article / n° article du fournisseur / nom de l’article  -->
+                <select name="selectItem[]" id="selectItem">
+                    <%items.forEach(item =>{%>
+                        <option value="<%= item.id %>" price="<%= item.item_retail_price %>" vat="<%= item.vat_percentage %>">
+                            <%= item.item_number %> - <%= item.item_ean %> - <%= item.item_label %>
+                        </option>
+                    <%});%>
+                    <option value="" hidden>Aucun article n'as été trouvé</option>
+                </select>
+            </td>
+            <td><input type="number" value="1" min="1" name="qty[]"></td>
+            <td><input type="number" value="0" min="0" max="100" name="discount[]"></td>
+            <td class="line-total">0</td>
+            <!-- <td>
+                <input type="button" value="Supprimer" class="btn" id="del-line-btn">
+            </td> -->
+        </tr>
+    </tbody>
+</table>
+<input type="button" value="Ajouter une ligne" class="btn" id="add-line-btn">
+
+<!-- Résumé de Facture -->
+ <h2>Résume de Facture</h2>
+<table id="summary-table">
+    <thead>
+        <tr>
+            <th>Taux TVA (%)</th>
+            <th>Base imposable</th>
+            <th>Montant TVA</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<p>Total Hors TVA: <span id="total-htva">0</span></p>
+<p>Total TVA: <span id="total-tva">0</span></p>
+<p>Total TTC: <span id="total-ttc">0</span></p>
+<input type="submit" value="Valider la facture" class="btn">
+</form>
+<!-- creation d'un template pour pouvoir passer au fichier js l'ensemble du selectItem -->
+<script type="text" id="invoice-line-template">
+    <tr>
+        <td class="line-number"></td>
+        <td>
+            <input type="text" placeholder="Recherche" id="searchItem">
+            <!-- La sélection d'article à partir d’une liste avec recherche sur n° d’article / n° article du fournisseur / nom de l’article  -->
+            <select name="selectItem[]" id="selectItem">
+                <%items.forEach(item =>{%>
+                    <option value="<%= item.id %>" price="<%= item.item_retail_price %>" vat="<%= item.vat_percentage %>">
+                        <%= item.item_number %> - <%= item.item_ean %> - <%= item.item_label %>
+                    </option>
+                <%});%>
+                <option value="" hidden>Aucun article n'as été trouvé</option>
+            </select>
+        </td>
+        <td><input type="number" value="1" min="1" name="qty[]"></td>
+        <td><input type="number" value="0" min="0" max="100" name="discount[]"></td>
+        <td class="line-total">0</td>
+        <!-- <td>
+            <input type="button" value="Supprimer" class="btn" id="del-line-btn">
+        </td> -->
+    </tr>
+</script>
+<script src="/js/invoicesForm.js"></script>
+<%- include("partials/footer.ejs") %>
