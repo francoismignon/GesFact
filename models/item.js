@@ -4,8 +4,15 @@ class Item {
   // Récupération de tous les articles avec les informations de TVA associées
   static async fetchAllItemsWithVat() {
     const items = await db.query(
-      "SELECT * FROM item AS i INNER JOIN vattype AS vt ON i.vat_type_id = vt.id INNER JOIN vat AS v ON v.vat_type_id = vt.id"
-    );
+      "SELECT i.id, i.vat_type_id, i.item_number, i.item_ean, i.item_label, i.item_description, i.item_retail_price, v.vat_percentage FROM item AS i INNER JOIN vattype AS vt ON i.vat_type_id = vt.id INNER JOIN vat AS v ON v.vat_type_id = vt.id");
+      console.log(items.rows);
+    return items.rows;
+  }
+
+  // Récupération d'un articles specifique avec les informations de TVA associées
+  static async fetchItemByIdWithVat(id) {
+    const items = await db.query(
+      "SELECT i.id, i.vat_type_id, i.item_number, i.item_ean, i.item_label, i.item_description, i.item_retail_price, v.vat_percentage FROM item AS i INNER JOIN vattype AS vt ON i.vat_type_id = vt.id INNER JOIN vat AS v ON v.vat_type_id = vt.id WHERE i.id = $1", [id]);
     return items.rows;
   }
 

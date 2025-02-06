@@ -41,12 +41,13 @@ class InvoiceController {
         const itemId = itemIds[i];
         const qty = parseFloat(quantities[i]);
         const discount = parseFloat(discounts[i]);
-        const item = await Item.fetchItemById(itemId);
+        const item = await Item.fetchItemByIdWithVat(itemId);
         const price = item[0].item_retail_price;
         const vat_percentage = parseFloat(item[0].vat_percentage);
+        console.log(item[0].vat_percentage);
         const totalLine = price * qty * (1 - discount / 100);
         // Création de la ligne de détail dans la facture
-        await Invoice.createInvoiceDetail(invoiceId, i + 1, itemId, qty, discount, totalLine, vat_percentage);
+        await Invoice.createInvoiceDetail(invoiceId, itemId, i + 1, qty ,discount, totalLine, vat_percentage);
       }
 
       res.redirect('/invoices'); // Redirection vers la liste des factures
@@ -60,6 +61,7 @@ class InvoiceController {
     try {
       const customers = await Customer.fetchAllCustomers();
       const items = await Item.fetchAllItemsWithVat();
+      console.log(items);
       res.render("invoicesForm.ejs", {
         customers,
         items,
@@ -103,18 +105,21 @@ class InvoiceController {
     try {
       const id = req.params.id;
       const invoice = await Invoice.fetchInvoiceById(id);
+    //   console.log(invoice);
       // Vérifier que la facture existe et n'est pas comptabilisée (flag_accounting == 0)
-      if (!invoice || invoice.flag_accounting != 0) {
-        return res.redirect('/invoices');
-      }
+    //   if (!invoice || invoice.flag_accounting != 0) {
+    //     return res.redirect('/invoices');
+    //   }
       const customers = await Customer.fetchAllCustomers();
       const items = await Item.fetchAllItemsWithVat();
-      res.render("invoicesForm.ejs", {
-        customers,
-        items,
-        mode: "edit",
-        invoice
-      });
+    //   console.log(items);
+      console.log(customers);
+    //   res.render("invoicesForm.ejs", {
+    //     customers,
+    //     items,
+    //     mode: "edit",
+    //     invoice
+    //   });
     } catch (error) {
       console.log(error);
     }
