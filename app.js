@@ -20,6 +20,8 @@ app.get("/invoices/add", InvoiceController.showAddInvoiceForm);
 app.post("/invoices/add", InvoiceController.addInvoice);
 app.get("/invoices/edit/:id", InvoiceController.showEditInvoiceForm);
 app.post("/invoices/edit/:id", InvoiceController.updateInvoice);
+// Comptabiliser une facture
+app.post("/invoices/accounting/:id", InvoiceController.accountingInvoice);
 
 // Routes Clients
 app.get("/customers", CustomerController.showListCustomers);

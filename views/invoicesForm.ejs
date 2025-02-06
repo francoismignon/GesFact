@@ -30,35 +30,62 @@
     <h2>Détails de Facture</h2>
     <table class="table table-bordered" id="invoice-details">
         <thead>
-            <tr>
-                <th>Ligne</th>
-                <th>Article</th>
-                <th>Quantité</th>
-                <th>Remise(%)</th>
-                <th>Total HTVA</th>
-            </tr>
+          <tr>
+            <th>Ligne</th>
+            <th>Article</th>
+            <th>Quantité</th>
+            <th>Remise(%)</th>
+            <th>Total HTVA</th>
+          </tr>
         </thead>
         <tbody>
-            <tr>
-                <td class="line-number">1</td>
+          <% if (mode === 'edit' && invoice && invoice.details && invoice.details.length > 0) { %>
+            <% invoice.details.forEach((detail, index) => { %>
+              <tr>
+                <td class="line-number"><%= index + 1 %></td>
                 <td>
-                    <input type="text" placeholder="Recherche" id="searchItem" class="form-control">
-                    <!-- Sélection d'article à partir d'une liste avec recherche -->
-                    <select name="selectItem[]" id="selectItem" class="form-control mt-2">
-                        <% items.forEach(item => { %>
-                            <option value="<%= item.id %>" price="<%= item.item_retail_price %>" vat="<%= item.vat_percentage %>">
-                                <%= item.item_number %> - <%= item.item_ean %> - <%= item.item_label %>
-                            </option>
-                        <% }); %>
-                        <option value="" hidden>Aucun article n'a été trouvé</option>
-                    </select>
+                  <!-- Affichage en lecture seule du nom de l'article, par exemple -->
+                  <input type="text" placeholder="Recherche" class="form-control" value="<%= detail.item_label %>" readonly>
+                  <select name="selectItem[]" class="form-control mt-2">
+                    <% items.forEach(item => { %>
+                      <option value="<%= item.id %>" price="<%= item.item_retail_price %>" vat="<%= item.vat_percentage %>" 
+                        <%= item.id === detail.item_id ? 'selected' : '' %>>
+                        <%= item.item_number %> - <%= item.item_ean %> - <%= item.item_label %>
+                      </option>
+                    <% }); %>
+                    <option value="" hidden>Aucun article n'a été trouvé</option>
+                  </select>
                 </td>
-                <td><input type="number" value="1" min="1" name="qty[]" class="form-control"></td>
-                <td><input type="number" value="0" min="0" max="100" name="discount[]" class="form-control"></td>
-                <td class="line-total">0</td>
+                <td>
+                  <input type="number" value="<%= detail.qty %>" min="1" name="qty[]" class="form-control">
+                </td>
+                <td>
+                  <input type="number" value="<%= detail.discount %>" min="0" max="100" name="discount[]" class="form-control">
+                </td>
+                <td class="line-total"><%= parseFloat(detail.price).toFixed(2) %></td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td class="line-number">1</td>
+              <td>
+                <input type="text" placeholder="Recherche" id="searchItem" class="form-control">
+                <select name="selectItem[]" id="selectItem" class="form-control mt-2">
+                  <% items.forEach(item => { %>
+                    <option value="<%= item.id %>" price="<%= item.item_retail_price %>" vat="<%= item.vat_percentage %>">
+                      <%= item.item_number %> - <%= item.item_ean %> - <%= item.item_label %>
+                    </option>
+                  <% }); %>
+                  <option value="" hidden>Aucun article n'a été trouvé</option>
+                </select>
+              </td>
+              <td><input type="number" value="1" min="1" name="qty[]" class="form-control"></td>
+              <td><input type="number" value="0" min="0" max="100" name="discount[]" class="form-control"></td>
+              <td class="line-total">0</td>
             </tr>
+          <% } %>
         </tbody>
-    </table>
+      </table>
     <input type="button" value="Ajouter une ligne" class="btn btn-secondary" id="add-line-btn">
     <!-- Résumé de Facture -->
     <h2>Résumé de Facture</h2>

@@ -3,6 +3,22 @@ import Customer from "../models/customer.js";
 import Item from "../models/item.js";
 
 class InvoiceController {
+  //Met a jour le flag accounting
+  static async accountingInvoice(req, res) {
+    try {
+      const id = req.params.id;
+  
+      // Appel d’une méthode du modèle qui met à jour flag_accounting = 1
+      await Invoice.setFlagAccounting(id, 1);
+  
+      // Puis on redirige vers la liste
+      res.redirect("/invoices");
+    } catch (error) {
+      console.log(error);
+      res.redirect("/invoices"); 
+    }
+  }
+  
   // Ajout d'une facture
   static async addInvoice(req, res) {
     try {
@@ -107,9 +123,18 @@ class InvoiceController {
       const invoice = await Invoice.fetchInvoiceById(id);
     //   console.log(invoice);
       // Vérifier que la facture existe et n'est pas comptabilisée (flag_accounting == 0)
-    //   if (!invoice || invoice.flag_accounting != 0) {
-    //     return res.redirect('/invoices');
-    //   }
+      if (!invoice || invoice.flag_accounting != 0) {
+        return res.redirect('/invoices');
+      }
+
+      // Convertir les dates au format ISO (YYYY-MM-DD)
+    invoice.inv_date = new Date(invoice.inv_date).toISOString().split('T')[0];
+    invoice.inv_duedate = new Date(invoice.inv_duedate).toISOString().split('T')[0];
+
+    // Récupérer les détails de la facture
+    const invoiceDetails = await Invoice.fetchInvoiceDetailsByInvoiceId(id);
+    invoice.details = invoiceDetails;
+
       const customers = await Customer.fetchAllCustomers();
       const items = await Item.fetchAllItemsWithVat();
     //   console.log(items);

@@ -11,6 +11,26 @@ class Invoice {
     this.inv_imposable_base_mount = inv_imposable_base_mount;
     this.flag_accounting = flag_accounting || 0; // Par défaut, 0 indique facture non comptabilisée
   }
+  //maj flag accounting
+  static async setFlagAccounting(id, value) {
+    const query = "UPDATE invoice SET flag_accounting = $1 WHERE id = $2 RETURNING *";
+    const values = [value, id];
+    const result = await db.query(query, values);
+    return result.rows[0];
+  }
+  
+
+  static async fetchInvoiceDetailsByInvoiceId(invoiceId) {
+    const result = await db.query(
+      `SELECT idet.*, i.item_number, i.item_ean, i.item_label, i.item_retail_price 
+       FROM invoicedetail AS idet 
+       INNER JOIN item AS i ON idet.item_id = i.id 
+       WHERE idet.invoice_id = $1 
+       ORDER BY line_number`,
+      [invoiceId]
+    );
+    return result.rows;
+  }
 
   //Recuperation d'une facture avec tous les details par son ID
   static async fetchAllInvoicesWithInvoiceDetails(id){

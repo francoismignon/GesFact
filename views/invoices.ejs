@@ -10,34 +10,41 @@
     <a href="/invoices/add" class="btn btn-primary">Ajouter une facture</a>
 </form>
 <table class="table table-bordered">
-    <thead>
+  <thead>
+    <tr>
+      <th>Numéro</th>
+      <th>Date d'émission</th>
+      <th>Date d'échéance</th>
+      <th>Client</th>
+      <th>Numéro de client</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% invoices.forEach(invoice => { %>
       <tr>
-        <th>Numéro</th>
-        <th>Date d'émission</th>
-        <th>Date d'échéance</th>
-        <th>Client</th>
-        <th>Numéro de client</th>
-        <th>Actions</th>
+        <td><%= invoice.inv_number %></td>
+        <td><%= invoice.inv_date %></td>
+        <td><%= invoice.inv_duedate %></td>
+        <td><%= invoice.cust_lastname %> <%= invoice.cust_firstname %></td>
+        <td><%= invoice.cust_number %></td>
+        <td>
+          <% if (invoice.flag_accounting == 0) { %>
+            <!-- Bouton Modifier si pas comptabilisée -->
+            <a href="/invoices/edit/<%= invoice.id %>" class="btn btn-primary">Modifier</a>
+            
+            <!-- Bouton Comptabiliser -->
+            <form action="/invoices/accounting/<%= invoice.id %>" method="POST" style="display:inline;">
+              <button type="submit" class="btn btn-success">Comptabiliser</button>
+            </form>
+          <% } else { %>
+            <!-- Facture comptabilisée -> boutons désactivés -->
+            <span class="btn btn-secondary disabled">Comptabilisée</span>
+          <% } %>
+        </td>
       </tr>
-    </thead>
-    <tbody>
-      <% invoices.forEach(invoice => { %>
-        <tr>
-          <td><%= invoice.inv_number %></td>
-          <td><%= invoice.inv_date %></td>
-          <td><%= invoice.inv_duedate %></td>
-          <td><%= invoice.cust_lastname %> <%= invoice.cust_firstname %></td>
-          <td><%= invoice.cust_number %></td>
-          <td>
-            <% if (invoice.flag_accounting == 0) { %>
-              <a href="/invoices/edit/<%= invoice.id %>" class="btn btn-primary">Modifier</a>
-            <% } else { %>
-              <span class="btn btn-secondary disabled">Comptabilisée</span>
-            <% } %>
-          </td>
-        </tr>
-      <% }); %>
-    </tbody>
+    <% }); %>
+  </tbody>
 </table>
 <script src="/js/invoices.js"></script>
 <%- include("partials/footer.ejs") %>
