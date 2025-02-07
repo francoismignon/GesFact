@@ -7,6 +7,7 @@ class InvoiceController {
   static async accountingInvoice(req, res) {
     try {
       const id = req.params.id;
+      // console.log(id);
   
       // Appel d’une méthode du modèle qui met à jour flag_accounting = 1
       await Invoice.setFlagAccounting(id, 1);
@@ -28,6 +29,7 @@ class InvoiceController {
         inv_date: req.body.date_emission,
         inv_duedate: req.body.date_echeance
       };
+      // console.log(req.body.date_emission);
 
       // Calcul de la date d'échéance par défaut (30 jours après)
       if (!data.inv_duedate) {
@@ -60,7 +62,7 @@ class InvoiceController {
         const item = await Item.fetchItemByIdWithVat(itemId);
         const price = item[0].item_retail_price;
         const vat_percentage = parseFloat(item[0].vat_percentage);
-        console.log(item[0].vat_percentage);
+        // console.log(item[0].vat_percentage);
         const totalLine = price * qty * (1 - discount / 100);
         // Création de la ligne de détail dans la facture
         await Invoice.createInvoiceDetail(invoiceId, itemId, i + 1, qty ,discount, totalLine, vat_percentage);
@@ -77,7 +79,7 @@ class InvoiceController {
     try {
       const customers = await Customer.fetchAllCustomers();
       const items = await Item.fetchAllItemsWithVat();
-      console.log(items);
+      // console.log(items);
       res.render("invoicesForm.ejs", {
         customers,
         items,
@@ -120,25 +122,18 @@ class InvoiceController {
   static async showEditInvoiceForm(req, res) {
     try {
       const id = req.params.id;
-      const invoice = await Invoice.fetchInvoiceById(id);
-    //   console.log(invoice);
-      // Vérifier que la facture existe et n'est pas comptabilisée (flag_accounting == 0)
-      if (!invoice || invoice.flag_accounting != 0) {
-        return res.redirect('/invoices');
-      }
-
-      // Convertir les dates au format ISO (YYYY-MM-DD)
-    invoice.inv_date = new Date(invoice.inv_date).toISOString().split('T')[0];
-    invoice.inv_duedate = new Date(invoice.inv_duedate).toISOString().split('T')[0];
+      const invoice = await Invoice.fetchInvoiceWithCustomerByInvoiceId(id);
+      // console.log(invoice);
 
     // Récupérer les détails de la facture
     const invoiceDetails = await Invoice.fetchInvoiceDetailsByInvoiceId(id);
     invoice.details = invoiceDetails;
+    // console.log(invoice);
 
-      const customers = await Customer.fetchAllCustomers();
-      const items = await Item.fetchAllItemsWithVat();
+    const customers = await Customer.fetchAllCustomers();
+    const items = await Item.fetchAllItemsWithVat();
     //   console.log(items);
-      console.log(customers);
+      // console.log(customers);
       res.render("invoicesForm.ejs", {
         customers,
         items,

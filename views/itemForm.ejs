@@ -3,7 +3,7 @@
 <form method="POST" action="<%= mode === 'add' ? '/items/add' : '/items/edit/' + (item ? item.id : '') %>">
   <div class="form-group">
     <label>Numéro de l'article :</label>
-    <input type="text" name="item_number" value="<%= item ? item.item_number : '' %>" class="form-control" required>
+    <input type="text" name="item_number" value="<%= item ? item.item_number : itemNumber %>" class="form-control" readonly>
   </div>
   <div class="form-group">
     <label>EAN de l'article :</label>
@@ -18,8 +18,15 @@
     <input type="number" step="0.01" name="item_retail_price" value="<%= item ? item.item_retail_price : '' %>" class="form-control" required>
   </div>
   <div class="form-group">
-    <label>ID Type TVA :</label>
-    <input type="number" name="vat_type_id" value="<%= item ? item.vat_type_id : '' %>" class="form-control">
+    <label>Type TVA :</label>
+    <select class="form-control" name="vat_type_id">
+    <%tvaAndValues.forEach(tvaAndValue =>{%>
+      <option value="<%= tvaAndValue.vat_type_id %>"
+          <%= item && item.vat_type_id === tvaAndValue.vat_type_id? 'selected': '' %>>
+        <%= tvaAndValue.label %>
+      </option>
+      <%});%>
+    </select>
   </div>
   <button type="submit" class="btn btn-primary">Sauvegarder</button>
 </form>

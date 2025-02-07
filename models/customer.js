@@ -18,6 +18,12 @@ class Customer {
     this.cust_info = cust_info;
   }
 
+  //Recupere le derneier numero de client
+  static async fetchLastCustomerNumber(){
+    const result = await db.query("SELECT cust_number FROM customers ORDER BY cust_number DESC LIMIT 1");
+    return result.rows;
+  }
+
   // Récupérer tous les clients
   static async fetchAllCustomers() {
     const customers = await db.query("SELECT * FROM customers");

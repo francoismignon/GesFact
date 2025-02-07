@@ -52,7 +52,7 @@ class Invoice {
   // Récupération des factures par numéro de facture
   static async fetchInvoiceByInvoiceNumber(invNumber) {
     const invoices = await db.query(
-      "SELECT * FROM invoice AS i INNER JOIN customers AS c ON i.cust_id = c.id WHERE inv_number = $1", 
+      "SELECT i.id, i.inv_number, i.inv_date, i.inv_duedate, c.cust_lastname, c.cust_firstname, c.cust_number, i.flag_accounting FROM invoice AS i INNER JOIN customers AS c ON i.cust_id = c.id WHERE inv_number = $1 ORDER BY i.inv_date DESC", 
       [invNumber]
     );
     return invoices.rows;
@@ -61,7 +61,7 @@ class Invoice {
   // Récupération des factures par date d'émission
   static async fetchInvoiceByInvoiceDate(invDate) {
     const invoices = await db.query(
-      "SELECT * FROM invoice AS i INNER JOIN customers AS c ON i.cust_id = c.id WHERE inv_date = $1", 
+      "SELECT i.id, i.inv_number, i.inv_date, i.inv_duedate, c.cust_lastname, c.cust_firstname, c.cust_number, i.flag_accounting FROM invoice AS i INNER JOIN customers AS c ON i.cust_id = c.id WHERE inv_date = $1 ORDER BY i.inv_date DESC", 
       [invDate]
     );
     return invoices.rows;
@@ -70,7 +70,7 @@ class Invoice {
   // Récupération de toutes les factures avec les informations du client associé
   static async fetchAllInvoicesWithLinkCustomer() {
     const invoices = await db.query(
-      "SELECT * FROM invoice AS i INNER JOIN customers AS c ON i.cust_id = c.id"
+      "SELECT i.id, i.inv_number, i.inv_date, i.inv_duedate, c.cust_lastname, c.cust_firstname, c.cust_number, i.flag_accounting FROM invoice AS i INNER JOIN customers AS c ON i.cust_id = c.id ORDER BY i.inv_date DESC"
     );
     return invoices.rows;
   }
@@ -78,6 +78,11 @@ class Invoice {
   // Récupérer une facture par son ID
   static async fetchInvoiceById(id) {
     const result = await db.query("SELECT * FROM invoice WHERE id = $1", [id]);
+    return result.rows[0];
+  }
+  //Recuperer une facture avec le client par le numero de facture
+  static async fetchInvoiceWithCustomerByInvoiceId(id){
+    const result = await db.query("SELECT i.*, c.id, c.cust_number, c.cust_lastname, c.cust_firstname, cust_vat_number FROM invoice AS i INNER JOIN customers AS c ON i.cust_id = c.id WHERE i.id = $1", [id]);
     return result.rows[0];
   }
 

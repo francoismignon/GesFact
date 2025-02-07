@@ -7,20 +7,21 @@
     <!-- Dates -->
     <div class="form-group">
       <label>Date d'émission :</label>
-      <input type="date" name="date_emission" value="<%= invoice ? invoice.inv_date : new Date().toISOString().split('T')[0] %>" class="form-control">
+      <!-- correction du bug qui affichais un jour en moin -->
+      <input type="date" name="date_emission" value="<%= invoice ? new Date(new Date(invoice.inv_date).setDate(new Date(invoice.inv_date).getDate() + 1)).toISOString().split('T')[0] : '' %>" class="form-control" required>
     </div>
     <div class="form-group">
       <label>Date d'échéance :</label>
-      <input type="date" name="date_echeance" value="<%= invoice ? invoice.inv_duedate : '' %>" class="form-control">
+      <input type="date" name="date_echeance" value="<%= invoice ? new Date(new Date(invoice.inv_duedate).setDate(new Date(invoice.inv_duedate).getDate() + 1)).toISOString().split('T')[0] : '' %>" class="form-control">
       <small>Par défaut, 30 jours après la date d'émission</small>
     </div>
     <!-- Sélection du client -->
     <div class="form-group">
       <label>Client :</label>
-      <input type="text" name="searchCustomer" placeholder="Recherche" id="searchCustomer" class="form-control">
+      <input type="text" name="searchCustomer" placeholder="Recherche" id="searchCustomer" class="form-control" value="<%= invoice ? invoice.cust_lastname : '' %>">
       <select name="cust_id" id="selectCustomer" class="form-control mt-2">
         <% customers.forEach(customer => { %>
-            <option value="<%= customer.id %>">
+            <option value="<%= customer.id %>" <%= invoice && customer.id === invoice.cust_id ? 'selected': '' %>>
                 <%= customer.cust_number %> - <%= customer.cust_lastname %> <%= customer.cust_firstname %> - <%= customer.cust_vat_number %>
             </option>
         <% }); %>
@@ -44,8 +45,8 @@
               <tr>
                 <td class="line-number"><%= index + 1 %></td>
                 <td>
-                  <!-- Affichage en lecture seule du nom de l'article, par exemple -->
-                  <input type="text" placeholder="Recherche" class="form-control" value="<%= detail.item_label %>" readonly>
+                  <!-- Ajout d'un id unique pour la recherche -->
+                  <input type="text" placeholder="Recherche" id="searchItem-<%= index %>" class="form-control" value="<%= detail.item_label %>">
                   <select name="selectItem[]" class="form-control mt-2">
                     <% items.forEach(item => { %>
                       <option value="<%= item.id %>" price="<%= item.item_retail_price %>" vat="<%= item.vat_percentage %>" 
@@ -69,8 +70,9 @@
             <tr>
               <td class="line-number">1</td>
               <td>
-                <input type="text" placeholder="Recherche" id="searchItem" class="form-control">
-                <select name="selectItem[]" id="selectItem" class="form-control mt-2">
+                <!-- Pour la première ligne en mode création, on assigne un id unique -->
+                <input type="text" placeholder="Recherche" id="searchItem-0" class="form-control">
+                <select name="selectItem[]" id="selectItem-0" class="form-control mt-2">
                   <% items.forEach(item => { %>
                     <option value="<%= item.id %>" price="<%= item.item_retail_price %>" vat="<%= item.vat_percentage %>">
                       <%= item.item_number %> - <%= item.item_ean %> - <%= item.item_label %>
@@ -80,7 +82,7 @@
                 </select>
               </td>
               <td><input type="number" value="1" min="1" name="qty[]" class="form-control"></td>
-              <td><input type="number" value="0" min="0" max="100" name="discount[]" class="form-control"></td>
+              <td><input type="number" value="0" min="0" max="100" name="discount[]" class="form-control" step="10"></td>
               <td class="line-total">0</td>
             </tr>
           <% } %>
@@ -109,8 +111,9 @@
     <tr>
         <td class="line-number"></td>
         <td>
-            <input type="text" placeholder="Recherche" id="searchItem" class="form-control">
-            <select name="selectItem[]" id="selectItem" class="form-control mt-2">
+            <!-- On utilise un id temporaire qui sera remplacé par un id unique lors de l'ajout -->
+            <input type="text" placeholder="Recherche" id="searchItem-temp" class="form-control">
+            <select name="selectItem[]" class="form-control mt-2">
                 <% items.forEach(item => { %>
                     <option value="<%= item.id %>" price="<%= item.item_retail_price %>" vat="<%= item.vat_percentage %>">
                         <%= item.item_number %> - <%= item.item_ean %> - <%= item.item_label %>

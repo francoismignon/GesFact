@@ -10,23 +10,32 @@ document.addEventListener("DOMContentLoaded", function () {
     // On récupère le template HTML pour une nouvelle ligne
     const templateHTML = document.querySelector('#invoice-line-template').innerHTML;
 
-    // // Si une première ligne existe déjà dans le HTML, on y attache les événements
-    // const firstRow = document.querySelector('#invoice-details tbody tr');
-    // if (firstRow) {
-    //     addListener(firstRow);
-    //     recalc(); // Met à jour le résumé dès le chargement
-    // }
-    // Au lieu de seulement firstRow :
+    // Compteur pour générer des IDs uniques pour les inputs de recherche
+    let uniqueCounter = document.querySelectorAll('#invoice-details tbody tr').length;
+
+    // --- Attacher les événements aux lignes existantes ---
     const allRows = document.querySelectorAll('#invoice-details tbody tr');
-    allRows.forEach(row => {
+    allRows.forEach((row, index) => {
+        // Pour les lignes qui n'ont pas d'ID sur l'input de recherche, on en assigne un
+        const searchInput = row.querySelector('input[id^="searchItem"]');
+        if (!searchInput.id || searchInput.id === 'searchItem') {
+            searchInput.id = "searchItem-" + index;
+        }
         addListener(row);
-        recalc();
+        recalc(); // Met à jour le résumé dès le chargement
     });
 
     // --- Ajout d'une nouvelle ligne ---
     addLineBtn.addEventListener("click", () => {
         const newRow = document.createElement("tr");
         newRow.innerHTML = templateHTML;
+        // Incrémenter le compteur pour l'ID unique
+        uniqueCounter++;
+        // Remplacer l'ID temporaire par un ID unique
+        const searchInput = newRow.querySelector('#searchItem-temp');
+        if (searchInput) {
+            searchInput.id = "searchItem-" + uniqueCounter;
+        }
         tbody.appendChild(newRow);
         updateLineNumbers();
         addListener(newRow);
@@ -107,7 +116,8 @@ document.addEventListener("DOMContentLoaded", function () {
         discountInput.addEventListener("input", recalc);
 
         // --- Recherche d'article par ligne ---
-        const rowSearch = row.querySelector('#searchItem');
+        // Utilisation d'un sélecteur qui récupère l'input dont l'id commence par "searchItem"
+        const rowSearch = row.querySelector('input[id^="searchItem"]');
         rowSearch.addEventListener('input', function () {
             const search = this.value.toLowerCase().trim();
             const safeSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

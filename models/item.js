@@ -1,11 +1,22 @@
 import db from "../configs/database.js";
 
 class Item {
+  //Recupere tous les type de tva ainsi que leur valeurs assccier
+  static async fetchAllTvaTypeWithValue(){
+    const result = await db.query("SELECT * FROM vattype AS vt INNER JOIN vat AS v ON v.vat_type_id = vt.id");
+    return result.rows;
+  }
+  //Recupere le derneier numero d'article
+  static async fetchLastItemNumber(){
+    const result = await db.query("SELECT item_number FROM item ORDER BY item_number DESC LIMIT 1");
+    return result.rows;
+  }
+
   // Récupération de tous les articles avec les informations de TVA associées
   static async fetchAllItemsWithVat() {
     const items = await db.query(
       "SELECT i.id, i.vat_type_id, i.item_number, i.item_ean, i.item_label, i.item_description, i.item_retail_price, v.vat_percentage FROM item AS i INNER JOIN vattype AS vt ON i.vat_type_id = vt.id INNER JOIN vat AS v ON v.vat_type_id = vt.id");
-      console.log(items.rows);
+      // console.log(items.rows);
     return items.rows;
   }
 
@@ -30,6 +41,8 @@ class Item {
 
   // Création d'un article
   static async create(data) {
+    
+    // console.log(data);
     const query = `
       INSERT INTO item (item_number, item_ean, item_label, item_retail_price, vat_type_id)
       VALUES ($1, $2, $3, $4, $5)

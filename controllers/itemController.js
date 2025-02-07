@@ -12,14 +12,28 @@ class ItemController {
   }
 
   // Affichage du formulaire d'ajout d'un article
-  static showAddItemForm(req, res) {
-    res.render("itemForm.ejs", { mode: "add", item: null });
+  static async showAddItemForm(req, res) {
+    const lastItemNumber = await Item.fetchLastItemNumber();
+    const arrayTvaTypeAndValue = await Item.fetchAllTvaTypeWithValue();
+    console.log(arrayTvaTypeAndValue);
+    // console.log(lastItemNumber.length);
+    if (lastItemNumber.length === 0) {
+      console.log("le tableau est vide");
+    }
+    // console.log(typeof(lastItemNumber.item_number))
+    res.render("itemForm.ejs", { 
+      mode: "add", 
+      item: null,
+      itemNumber : lastItemNumber.length === 0?2000:parseInt(lastItemNumber[0].item_number) + 1,
+      tvaAndValues: arrayTvaTypeAndValue
+    });
   }
 
   // Ajout d'un article
   static async addItem(req, res) {
     try {
       await Item.create(req.body);
+      console.log(req.body);
       res.redirect("/items");
     } catch (error) {
       console.log(error);
@@ -31,8 +45,15 @@ class ItemController {
     try {
       const id = req.params.id;
       const itemArray = await Item.fetchItemById(id);
+      const arrayTvaTypeAndValue = await Item.fetchAllTvaTypeWithValue();
       const item = itemArray[0];
-      res.render("itemForm.ejs", { mode: "edit", item });
+      console.log(item.vat_type_id);
+      console.log(arrayTvaTypeAndValue[0].vat_type_id);
+      res.render("itemForm.ejs", { 
+        mode: "edit", 
+        item,
+        tvaAndValues: arrayTvaTypeAndValue
+       });
     } catch (error) {
       console.log(error);
     }

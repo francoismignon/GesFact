@@ -47,7 +47,8 @@ header a {
   font-weight: 600;
 }
 header a:hover {
-  text-decoration: underline;
+  color: white;
+  text-decoration: none;
 }
 
 /* Boutons avec une transition douce */

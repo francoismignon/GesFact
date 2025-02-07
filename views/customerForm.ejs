@@ -3,25 +3,25 @@
 <form method="POST" action="<%= mode === 'add' ? '/customers/add' : '/customers/edit/' + (customer ? customer.id : '') %>">
   <div class="form-group">
     <label>Numéro du client :</label>
-    <input type="number" name="cust_number" value="<%= customer ? customer.cust_number : '' %>" class="form-control" required>
+    <input type="number" name="cust_number" value="<%= customer ? customer.cust_number : custNumber %>" class="form-control" readonly>
   </div>
   <div class="form-group">
     <label>Compagnie :</label>
-    <input type="text" name="cust_compagny" value="<%= customer ? customer.cust_compagny : '' %>" class="form-control" required>
+    <input type="text" name="cust_compagny" value="<%= customer ? customer.cust_compagny : '' %>" class="form-control">
   </div>
   <div class="row">
     <div class="col">
       <label>Prénom :</label>
-      <input type="text" name="cust_firstname" value="<%= customer ? customer.cust_firstname : '' %>" class="form-control">
+      <input type="text" name="cust_firstname" value="<%= customer ? customer.cust_firstname : '' %>" class="form-control" required>
     </div>
     <div class="col">
       <label>Nom :</label>
-      <input type="text" name="cust_lastname" value="<%= customer ? customer.cust_lastname : '' %>" class="form-control">
+      <input type="text" name="cust_lastname" value="<%= customer ? customer.cust_lastname : '' %>" class="form-control" required>
     </div>
   </div>
   <div class="form-group">
     <label>TVA :</label>
-    <input type="text" name="cust_vat_number" value="<%= customer ? customer.cust_vat_number : '' %>" class="form-control">
+    <input type="text" name="cust_vat_number" value="<%= customer ? customer.cust_vat_number : '' %>" class="form-control" required>
   </div>
   <div class="form-group">
     <label>Email :</label>

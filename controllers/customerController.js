@@ -12,14 +12,22 @@ class CustomerController {
   }
 
   // Affichage du formulaire d'ajout d'un client
-  static showAddCustomerForm(req, res) {
-    res.render("customerForm.ejs", { mode: "add", customer: null });
+  static async showAddCustomerForm(req, res) {
+    const lastCustomerNumber = await Customer.fetchLastCustomerNumber();
+    // console.log(typeof(lastCustomerNumber.cust_number));
+    console.log(lastCustomerNumber.length);
+    res.render("customerForm.ejs", { 
+      mode: "add", 
+      customer: null ,
+      custNumber : lastCustomerNumber.length === 0 ?1000:lastCustomerNumber[0].cust_number + 1
+    });
   }
 
   // Ajout d'un client
   static async addCustomer(req, res) {
     try {
       await Customer.create(req.body);
+      console.log(req.body);
       res.redirect("/customers");
     } catch (error) {
       console.log(error);

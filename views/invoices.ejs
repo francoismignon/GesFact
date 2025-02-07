@@ -24,16 +24,17 @@
     <% invoices.forEach(invoice => { %>
       <tr>
         <td><%= invoice.inv_number %></td>
-        <td><%= invoice.inv_date %></td>
-        <td><%= invoice.inv_duedate %></td>
+        <!-- j'utilise tolocaldate pour ne pas perdre un jour si je le met en format UTC -->
+        <td><%= invoice.inv_date.toLocaleDateString('fr-BE') %></td>
+        <td><%= invoice.inv_duedate.toLocaleDateString('fr-BE')%></td>
         <td><%= invoice.cust_lastname %> <%= invoice.cust_firstname %></td>
         <td><%= invoice.cust_number %></td>
         <td>
           <% if (invoice.flag_accounting == 0) { %>
-            <div class="btn-group" role="group">
+            <div class="btn-group mt-2 mb-2" role="group">
               <a href="/invoices/edit/<%= invoice.id %>" class="btn btn-primary">Modifier</a>
               <form action="/invoices/accounting/<%= invoice.id %>" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-success ml-2">Comptabiliser</button>
+                <button type="submit" class="btn btn-success ml-3">Comptabiliser</button>
               </form>
             </div>
           <% } else { %>
